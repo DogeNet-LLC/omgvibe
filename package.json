@@ -1,0 +1,38 @@
+{
+  "name": "omgvibe",
+  "version": "0.1.0",
+  "description": "Interactive NPX wizard for configuring CodeX or Claude Code clients for OhMyGPT API access.",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "bin": {
+    "omgvibe": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "codex",
+    "claude",
+    "cli",
+    "omg",
+    "ohmygpt"
+  ],
+  "author": "DogeNet LLC",
+  "license": "MIT",
+  "dependencies": {
+    "kleur": "^4.1.5",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "@types/prompts": "^2.4.9",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.9.2"
+  }
+}
