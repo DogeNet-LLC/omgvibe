@@ -16,7 +16,7 @@
    npx omgvibe
    ```
 3. Choose your language and whether you want to configure **CodeX** or **Claude Code**.
-4. Let the wizard re-run the official npm install for the CLI you picked.
+4. Decide whether to let the wizard re-run the official npm install for the CLI you picked (recommended for the latest features).
 5. Confirm that it can back up and overwrite your existing config files.
 6. Paste your OhMyGPT API key (the wizard links to <https://www.ohmygpt.com/apis/keys>) and answer any remaining prompts.
 7. Launch your CLI (`codex` or `claude`) and enjoy!
@@ -26,7 +26,7 @@
 ## What Gets Configured
 ### CodeX
 - `~/.codex/config.toml` is rewritten with OhMyGPT defaults, including the base URL `https://apic1.ohmycdn.com/api/v1/ai/openai/codex-omg/v1`
-- You can pick between `gpt-5` and `gpt-5-codex` while running the wizard
+- The default selection is `gpt-5-codex` (recommended), but you can switch to `gpt-5` during the wizard
 - `~/.codex/auth.json` stores your `OPENAI_API_KEY` for OhMyGPT
 
 ### Claude Code

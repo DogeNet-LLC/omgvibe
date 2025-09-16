@@ -16,7 +16,7 @@
    npx omgvibe
    ```
 3. ウィザード内で言語と対象 CLI（CodeX または Claude Code）を選びます。
-4. ウィザードが公式の `npm install -g` を実行し、CLI を最新化します。
+4. 公式の `npm install -g` を実行するかどうかを選択します（最新版を使いたい場合は実行推奨）。
 5. 設定ファイルをバックアップして上書きしてよいか確認します。
 6. 案内に従って OhMyGPT の API Key（<https://www.ohmygpt.com/apis/keys> で発行）を入力し、残りの質問にも答えます。
 7. 完了後は `codex` または `claude` を起動して利用を始めてください。
@@ -26,7 +26,7 @@
 ## 生成される設定
 ### CodeX
 - `~/.codex/config.toml` を OhMyGPT 推奨設定に書き換え (`https://apic1.ohmycdn.com/api/v1/ai/openai/codex-omg/v1` を使用)
-- ウィザード内で `gpt-5` と `gpt-5-codex` を選択可能
+- デフォルトは `gpt-5-codex`（推奨）ですが、`gpt-5` へ切り替えも可能
 - `~/.codex/auth.json` に `OPENAI_API_KEY` を保存
 
 ### Claude Code

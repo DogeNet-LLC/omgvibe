@@ -1,5 +1,9 @@
 # Release Notes & Publishing Guide
 
+## v0.1.1
+- Default CodeX model now points to `gpt-5-codex` for better coding performance
+- Added an opt-out for re-running `npm install -g` so users can keep existing CLI versions
+
 ## v0.1.0
 - Initial public release of `omgvibe`
 - Interactive NPX wizard with English/Chinese/Japanese localization

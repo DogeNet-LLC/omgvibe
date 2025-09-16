@@ -23,6 +23,8 @@ type Messages = {
   installFailed: string;
   confirmOverwrite: string;
   declineOverwrite: string;
+  installConfirm: (command: string) => string;
+  installSkipped: string;
   yes: string;
   no: string;
   codexModelPrompt: string;
@@ -66,12 +68,14 @@ const TRANSLATIONS: Record<Language, Messages> = {
     confirmOverwrite:
       'We will backup your current configuration (.bak files) and write the OhMyGPT settings. Continue?',
     declineOverwrite: 'Understood. No files were touched.',
+    installConfirm: (command) => `Run ${command} now to ensure you have the latest release?`,
+    installSkipped: 'Skipped installation. We\'ll use the version already on your machine.',
     yes: 'Yes',
     no: 'No',
     codexModelPrompt: 'Pick the default CodeX model to set in config.toml',
     codexModels: [
-      { value: 'gpt-5', title: 'gpt-5 (general purpose, recommended for most tasks)' },
-      { value: 'gpt-5-codex', title: 'gpt-5-codex (coding optimized beta)' }
+      { value: 'gpt-5-codex', title: 'gpt-5-codex (latest, optimized for coding - recommended)' },
+      { value: 'gpt-5', title: 'gpt-5 (general purpose)' }
     ],
     apiKeyPrompt: `Paste your OhMyGPT API key (open ${API_KEY_URL} if you need to create one)`,
     apiKeyHint: 'Your API key is stored locally on this device only.',
@@ -105,12 +109,14 @@ const TRANSLATIONS: Record<Language, Messages> = {
     installFailed: '安装失败，请检查上方输出后重新运行向导。',
     confirmOverwrite: '将会先备份（*.bak）再覆写当前配置文件，是否继续？',
     declineOverwrite: '明白，未对文件进行任何更改。',
+    installConfirm: (command) => `是否现在执行 ${command} 以确保使用最新版本？`,
+    installSkipped: '已跳过安装，将使用你当前的 CLI 版本。',
     yes: '是',
     no: '否',
     codexModelPrompt: '请选择 CodeX 默认模型（写入 config.toml）',
     codexModels: [
-      { value: 'gpt-5', title: 'gpt-5（通用推荐）' },
-      { value: 'gpt-5-codex', title: 'gpt-5-codex（代码增强版 Beta）' }
+      { value: 'gpt-5-codex', title: 'gpt-5-codex（最新，面向 CodeX 场景优化，推荐）' },
+      { value: 'gpt-5', title: 'gpt-5（通用模型）' }
     ],
     apiKeyPrompt: `请输入你的 OhMyGPT API Key（如需创建，请访问 ${API_KEY_URL}）`,
     apiKeyHint: '密钥只会保存在本机。',
@@ -144,12 +150,14 @@ const TRANSLATIONS: Record<Language, Messages> = {
     installFailed: 'インストールに失敗しました。ログを確認してから再実行してください。',
     confirmOverwrite: '既存の設定を .bak にバックアップしてから OhMyGPT 設定を書き込みます。続行しますか？',
     declineOverwrite: '了解しました。何も変更していません。',
+    installConfirm: (command) => `${command} を今すぐ実行して最新版に更新しますか？`,
+    installSkipped: 'インストールをスキップしました。現在の CLI バージョンを使用します。',
     yes: 'はい',
     no: 'いいえ',
     codexModelPrompt: 'config.toml に設定する CodeX のデフォルトモデルを選択してください',
     codexModels: [
-      { value: 'gpt-5', title: 'gpt-5（バランス型・推奨）' },
-      { value: 'gpt-5-codex', title: 'gpt-5-codex（コード向けベータ版）' }
+      { value: 'gpt-5-codex', title: 'gpt-5-codex（最新・コード向け最適化 推奨）' },
+      { value: 'gpt-5', title: 'gpt-5（汎用モデル）' }
     ],
     apiKeyPrompt: `OhMyGPT の API Key を入力してください（必要なら ${API_KEY_URL} で作成できます）`,
     apiKeyHint: 'キーはこの端末にのみ保存されます。',
@@ -250,9 +258,27 @@ const onCancel = (lang: Language) => {
 const configureCodex = async (lang: Language) => {
   const messages = TRANSLATIONS[lang];
 
-  const installOk = await runInstallCommand('npm', ['install', '-g', '@openai/codex'], lang);
-  if (!installOk) {
-    process.exit(1);
+  const codexInstallArgs = ['install', '-g', '@openai/codex'];
+  const codexInstallCommand = ['npm', ...codexInstallArgs];
+  const { runInstall } = await prompts(
+    {
+      type: 'toggle',
+      name: 'runInstall',
+      message: messages.installConfirm(codexInstallCommand.join(' ')),
+      initial: true,
+      active: messages.yes,
+      inactive: messages.no
+    },
+    { onCancel: () => onCancel(lang) }
+  );
+
+  if (runInstall) {
+    const installOk = await runInstallCommand('npm', codexInstallArgs, lang);
+    if (!installOk) {
+      process.exit(1);
+    }
+  } else {
+    console.log(kleur.yellow(messages.installSkipped));
   }
 
   const targetLabel = messages.targets.codex;
@@ -285,7 +311,7 @@ const configureCodex = async (lang: Language) => {
     { onCancel: () => onCancel(lang) }
   );
 
-  const selectedModel = (model as 'gpt-5' | 'gpt-5-codex') || 'gpt-5';
+  const selectedModel = (model as 'gpt-5' | 'gpt-5-codex') || 'gpt-5-codex';
 
   const { apiKey } = await prompts(
     [
@@ -339,9 +365,27 @@ const configureCodex = async (lang: Language) => {
 const configureClaude = async (lang: Language) => {
   const messages = TRANSLATIONS[lang];
 
-  const installOk = await runInstallCommand('npm', ['install', '-g', '@anthropic-ai/claude-code'], lang);
-  if (!installOk) {
-    process.exit(1);
+  const claudeInstallArgs = ['install', '-g', '@anthropic-ai/claude-code'];
+  const claudeInstallCommand = ['npm', ...claudeInstallArgs];
+  const { runInstall } = await prompts(
+    {
+      type: 'toggle',
+      name: 'runInstall',
+      message: messages.installConfirm(claudeInstallCommand.join(' ')),
+      initial: true,
+      active: messages.yes,
+      inactive: messages.no
+    },
+    { onCancel: () => onCancel(lang) }
+  );
+
+  if (runInstall) {
+    const installOk = await runInstallCommand('npm', claudeInstallArgs, lang);
+    if (!installOk) {
+      process.exit(1);
+    }
+  } else {
+    console.log(kleur.yellow(messages.installSkipped));
   }
 
   const targetLabel = messages.targets.claude;

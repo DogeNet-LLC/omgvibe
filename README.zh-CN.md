@@ -16,7 +16,7 @@
    npx omgvibe
    ```
 3. 选择界面语言，并指定需要配置的 CLI（CodeX 或 Claude Code）。
-4. 向导会自动执行对应的 `npm install -g` 命令，确保 CLI 已安装且保持最新。
+4. 选择是否执行对应的 `npm install -g` 命令（推荐保持最新版本）。
 5. 确认是否允许备份并覆写现有配置。
 6. 按提示粘贴你的 OhMyGPT APIKey（可以访问 <https://www.ohmygpt.com/apis/keys> 获取），并根据提示完成剩余步骤。
 7. 完成后即可直接运行 `codex` 或 `claude` 开始使用。
@@ -26,7 +26,7 @@
 ## 配置细节
 ### CodeX
 - 重写 `~/.codex/config.toml`，默认使用 `https://apic1.ohmycdn.com/api/v1/ai/openai/codex-omg/v1`
-- 向导支持选择默认模型：`gpt-5` 或 `gpt-5-codex`
+- 默认推荐模型为 `gpt-5-codex`，你也可以切换至 `gpt-5`
 - `~/.codex/auth.json` 中写入你的 `OPENAI_API_KEY`
 
 ### Claude Code
