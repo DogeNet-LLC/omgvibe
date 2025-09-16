@@ -1,4 +1,5 @@
 # omgvibe
+*语言: [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)*
 
 `omgvibe` 是一个面向 CodeX 与 Claude Code CLI 的交互式 NPX 向导，一键帮助你把客户端切换到 OhMyGPT 转发服务。流程中会自动选择语言、重新安装最新 CLI、备份配置并写入正确的 APIKey。
 

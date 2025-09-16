@@ -1,4 +1,5 @@
 # omgvibe
+*言語: [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)*
 
 `omgvibe` は CodeX と Claude Code CLI を OhMyGPT リレーに接続するためのインタラクティブ NPX ウィザードです。言語選択・CLI の再インストール・設定ファイルのバックアップ・API キーの書き込みまでをワンコマンドで実行します。
 

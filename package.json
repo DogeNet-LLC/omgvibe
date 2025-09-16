@@ -1,6 +1,6 @@
 {
   "name": "omgvibe",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Interactive NPX wizard for configuring CodeX or Claude Code clients for OhMyGPT API access.",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -34,5 +34,13 @@
     "@types/prompts": "^2.4.9",
     "rimraf": "^6.0.1",
     "typescript": "^5.9.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DogeNet-LLC/omgvibe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DogeNet-LLC/omgvibe/issues"
+  },
+  "homepage": "https://github.com/DogeNet-LLC/omgvibe#readme"
 }

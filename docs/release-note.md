@@ -1,5 +1,10 @@
 # Release Notes & Publishing Guide
 
+## v0.1.2
+- Added GitHub metadata links to the npm package manifest
+- Placed language switcher links at the top of each README variant
+- Improved API key prompt layout to place masked input on its own line
+
 ## v0.1.1
 - Default CodeX model now points to `gpt-5-codex` for better coding performance
 - Added an opt-out for re-running `npm install -g` so users can keep existing CLI versions

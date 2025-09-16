@@ -1,4 +1,5 @@
 # omgvibe
+*Languages: [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)*
 
 `omgvibe` is an interactive NPX wizard that wires CodeX or Claude Code CLIs to OhMyGPT's low-latency relay. It handles language selection, dependency installation, safe backups, and writes the correct API key configuration for you.
 

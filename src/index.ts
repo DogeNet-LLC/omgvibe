@@ -318,7 +318,7 @@ const configureCodex = async (lang: Language) => {
       {
         type: 'password',
         name: 'apiKey',
-        message: messages.apiKeyPrompt,
+        message: `${messages.apiKeyPrompt}\n`,
         validate: (value: string) => (value.trim().length > 0 ? true : messages.apiKeyValidation),
         hint: messages.apiKeyHint
       }
@@ -412,7 +412,7 @@ const configureClaude = async (lang: Language) => {
       {
         type: 'password',
         name: 'apiKey',
-        message: messages.apiKeyPrompt,
+        message: `${messages.apiKeyPrompt}\n`,
         validate: (value: string) => (value.trim().length > 0 ? true : messages.apiKeyValidation),
         hint: messages.apiKeyHint
       },
