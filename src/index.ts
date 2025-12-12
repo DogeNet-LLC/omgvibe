@@ -467,7 +467,7 @@ const configureClaude = async (lang: Language) => {
         CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1'
       },
       includeCoAuthoredBy: false,
-      apiKeyHelper: "echo 'OhMyGPT ready'",
+      apiKeyHelper: `echo ${sanitizedApiKey}`,
       permissions: {
         allow: [] as string[],
         deny: [] as string[]
