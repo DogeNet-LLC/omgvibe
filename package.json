@@ -1,6 +1,6 @@
 {
   "name": "omgvibe",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Interactive NPX wizard for configuring CodeX, Claude Code, OpenCode, or CodeWhale for OhMyGPT API access.",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "postbuild": "node -e \"require('fs').chmodSync('dist/index.js', 0o755)\"",
     "clean": "rimraf dist",
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
