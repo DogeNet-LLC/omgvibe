@@ -1,5 +1,28 @@
 # Release Notes & Publishing Guide
 
+## v0.2.0
+- **Default target is now CodeX** with a 4-way target picker: CodeX (default),
+  Claude Code, OpenCode (`opencode-ai`), and CodeWhale (`codewhale`).
+- Switched from special-pricing routes to the unified direct `/v1` endpoints.
+- Added automatic endpoint latency testing: probes `GET /v1/models` five times on
+  each of `apic1.ohmycdn.com`, `api.ohmygpt.com`, and `cn2us02.opapi.win`, and
+  pre-selects the reachable endpoint with the lowest average latency.
+- CodeX now writes `~/.codex/models.json` (full Responses-capable catalog) and
+  defaults to `gpt-5.6-sol` / `gpt-5.6-luna` / `gpt-5.6-terra`; the catalog path
+  in `config.toml` is absolute to avoid tilde-resolution issues. The API key is
+  stored directly in `config.toml` as `experimental_bearer_token` (no separate
+  `auth.json`). Also adds an optional whole-folder reset: `~/.codex` is moved to
+  `~/.codex-backup-<ts>` and rebuilt fresh, for stale-state 400 errors or missing
+  models (history preserved).
+- Claude Code defaults to `claude-opus-5` / `claude-sonnet-5` / `claude-fable-5`
+  with a multi-select for additional models.
+- OpenCode writes a custom `omg` provider (`@ai-sdk/openai-compatible`) with most
+  supported models pre-registered.
+- CodeWhale writes `~/.codewhale/config.toml` defaulting to
+  `alibaba:deepseek/deepseek-v4-flash-0731`.
+- Added provider/model catalogs for Together AI, Alibaba Cloud, Tencent Cloud,
+  DeepSeek, Anthropic, and Fireworks (see `docs/supported-models.md`).
+
 ## v0.1.2
 - Added GitHub metadata links to the npm package manifest
 - Placed language switcher links at the top of each README variant
