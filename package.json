@@ -1,6 +1,6 @@
 {
   "name": "omgvibe",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Interactive NPX wizard for configuring CodeX, Claude Code, OpenCode, or CodeWhale for OhMyGPT API access.",
   "type": "commonjs",
   "main": "dist/index.js",

@@ -170,7 +170,7 @@ export function buildClaudeSettings(
   haikuModel: string,
   subagentModel: string,
 ): string {
-  const base = baseURLOf(endpoint).replace(/\/$/, '');
+  const base = endpoint.url;
   const settings = {
     env: {
       DISABLE_TELEMETRY: '1',
@@ -207,13 +207,16 @@ export function buildOpenCodeConfig(
   defaultModel: string,
   models: ModelEntry[],
 ): string {
-  const modelMap: Record<string, { name: string; limit: { context: number; output?: number } }> = {};
+  // OpenCode's config schema requires `limit.output` to be present. A few
+  // catalog entries don't advertise a max output, so fill a sane 32K default
+  // rather than emitting an object that fails schema validation.
+  const DEFAULT_OUTPUT_TOKENS = 32768;
+  const modelMap: Record<string, { name: string; limit: { context: number; output: number } }> = {};
   for (const m of models) {
-    const limit: { context: number; output?: number } = { context: m.context };
-    if (m.output !== undefined) {
-      limit.output = m.output;
-    }
-    modelMap[m.id] = { name: m.name, limit };
+    modelMap[m.id] = {
+      name: m.name,
+      limit: { context: m.context, output: m.output ?? DEFAULT_OUTPUT_TOKENS },
+    };
   }
 
   const config = {
