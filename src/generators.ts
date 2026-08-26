@@ -21,6 +21,19 @@ const DEFAULT_REASONING_LEVELS = [
   { effort: 'max', description: 'Maximum reasoning depth for the hardest problems' },
 ];
 
+// Derived from OpenAI's official CodeX model catalog
+// (docs/cli-docs/codex-models.json) for the gpt-5.6 family. These models are
+// multimodal and use CodeX's Responses-Lite "code mode" rather than the generic
+// third-party fallback used by every other relay model.
+const GPT56_REASONING_LEVELS = [
+  { effort: 'low', description: 'Fast responses with lighter reasoning' },
+  { effort: 'medium', description: 'Balances speed and reasoning depth for everyday tasks' },
+  { effort: 'high', description: 'Greater reasoning depth for complex problems' },
+  { effort: 'xhigh', description: 'Extra high reasoning depth for complex problems' },
+  { effort: 'max', description: 'Maximum reasoning depth for the hardest problems' },
+  { effort: 'ultra', description: 'Maximum reasoning with automatic task delegation' },
+];
+
 // ---------------------------------------------------------------------------
 // CodeX
 // ---------------------------------------------------------------------------
@@ -36,11 +49,16 @@ interface CodeXModelCatalogEntry {
   supports_image_detail_original: boolean;
   truncation_policy: { mode: string; limit: number };
   supports_parallel_tool_calls: boolean;
-  tool_mode: null;
+  tool_mode: string | null;
   multi_agent_version: string;
   use_responses_lite: boolean;
   include_skills_usage_instructions: boolean;
+  include_apps_usage_instructions?: boolean;
+  include_plugin_usage_instructions?: boolean;
+  node_repl_auto_review_required?: boolean;
+  node_repl_disabled?: boolean;
   auto_review_model_override: null;
+  model_specialty?: string | null;
   context_window: number;
   max_context_window: number;
   effective_context_window_percent: number;
@@ -61,22 +79,130 @@ interface CodeXModelCatalogEntry {
   priority: number;
   model_messages: {
     instructions_template: string;
-    instructions_variables: {
-      personality_default: string;
-      personality_friendly: string;
-      personality_pragmatic: string;
-    };
+    instructions_variables:
+      | {
+          personality_default: string;
+          personality_friendly: string;
+          personality_pragmatic: string;
+        }
+      | null;
     approvals: null;
   };
   experimental_supported_tools: string[];
   supports_search_tool: boolean;
   default_service_tier: null;
+  supports_reasoning_summary_parameter?: boolean;
   supports_reasoning_summaries: boolean;
   base_instructions: string;
 }
 
+type CodeXModelCatalogOverrides = Partial<CodeXModelCatalogEntry>;
+
+/**
+ * Official CodeX metadata for OpenAI's gpt-5.6 family. Source:
+ * docs/cli-docs/codex-models.json.
+ */
+const CODEX_GPT56_OVERRIDES: Record<string, CodeXModelCatalogOverrides> = {
+  'gpt-5.6-sol': {
+    prefer_websockets: true,
+    web_search_tool_type: 'text_and_image',
+    input_modalities: ['text', 'image'],
+    supports_image_detail_original: true,
+    supports_parallel_tool_calls: true,
+    tool_mode: 'code_mode_only',
+    use_responses_lite: true,
+    include_apps_usage_instructions: true,
+    include_plugin_usage_instructions: true,
+    node_repl_auto_review_required: false,
+    node_repl_disabled: false,
+    model_specialty: null,
+    effective_context_window_percent: undefined,
+    reasoning_summary_format: undefined,
+    context_window: 272000,
+    max_context_window: 872000,
+    display_name: 'GPT-5.6-Sol',
+    description: 'Latest frontier agentic coding model.',
+    default_reasoning_level: 'low',
+    supported_reasoning_levels: GPT56_REASONING_LEVELS,
+    shell_type: 'unified_exec',
+    multi_agent_version: 'v2',
+    priority: 1,
+    model_messages: {
+      instructions_template: CODEX_SYSTEM_PROMPT,
+      instructions_variables: null,
+      approvals: null,
+    },
+    supports_reasoning_summary_parameter: true,
+    base_instructions: CODEX_SYSTEM_PROMPT,
+  },
+  'gpt-5.6-terra': {
+    prefer_websockets: true,
+    web_search_tool_type: 'text_and_image',
+    input_modalities: ['text', 'image'],
+    supports_image_detail_original: true,
+    supports_parallel_tool_calls: true,
+    tool_mode: 'code_mode_only',
+    use_responses_lite: true,
+    include_apps_usage_instructions: true,
+    include_plugin_usage_instructions: true,
+    node_repl_auto_review_required: false,
+    node_repl_disabled: false,
+    model_specialty: null,
+    effective_context_window_percent: undefined,
+    reasoning_summary_format: undefined,
+    context_window: 272000,
+    max_context_window: 872000,
+    display_name: 'GPT-5.6-Terra',
+    description: 'Balanced agentic coding model for everyday work.',
+    default_reasoning_level: 'medium',
+    supported_reasoning_levels: GPT56_REASONING_LEVELS,
+    shell_type: 'unified_exec',
+    multi_agent_version: 'v2',
+    priority: 2,
+    model_messages: {
+      instructions_template: CODEX_SYSTEM_PROMPT,
+      instructions_variables: null,
+      approvals: null,
+    },
+    supports_reasoning_summary_parameter: true,
+    base_instructions: CODEX_SYSTEM_PROMPT,
+  },
+  'gpt-5.6-luna': {
+    prefer_websockets: true,
+    web_search_tool_type: 'text_and_image',
+    input_modalities: ['text', 'image'],
+    supports_image_detail_original: true,
+    supports_parallel_tool_calls: true,
+    tool_mode: 'code_mode_only',
+    use_responses_lite: true,
+    include_apps_usage_instructions: true,
+    include_plugin_usage_instructions: true,
+    node_repl_auto_review_required: false,
+    node_repl_disabled: false,
+    model_specialty: null,
+    effective_context_window_percent: undefined,
+    reasoning_summary_format: undefined,
+    context_window: 272000,
+    max_context_window: 872000,
+    display_name: 'GPT-5.6-Luna',
+    description: 'Fast and affordable agentic coding model.',
+    default_reasoning_level: 'medium',
+    supported_reasoning_levels: GPT56_REASONING_LEVELS.slice(0, -1),
+    shell_type: 'unified_exec',
+    multi_agent_version: 'v1',
+    priority: 3,
+    model_messages: {
+      instructions_template: CODEX_SYSTEM_PROMPT,
+      instructions_variables: null,
+      approvals: null,
+    },
+    supports_reasoning_summary_parameter: true,
+    base_instructions: CODEX_SYSTEM_PROMPT,
+  },
+};
+
 function codexCatalogEntry(model: ModelEntry, priority: number): CodeXModelCatalogEntry {
-  return {
+  const base: CodeXModelCatalogEntry = {
     slug: model.id,
     prefer_websockets: false,
     support_verbosity: true,
@@ -125,6 +251,8 @@ function codexCatalogEntry(model: ModelEntry, priority: number): CodeXModelCatal
     supports_reasoning_summaries: true,
     base_instructions: CODEX_SYSTEM_PROMPT,
   };
+  const overrides = CODEX_GPT56_OVERRIDES[model.id];
+  return overrides ? { ...base, ...overrides } : base;
 }
 
 /** `~/.codex/models.json` — the CodeX model catalog. */

@@ -87,9 +87,9 @@ const RAW_MODELS: Array<{
   codexDefault?: boolean;
 }> = [
   // CodeX defaults (OpenAI gpt-5.6 family).
-  { id: 'gpt-5.6-sol', name: 'GPT-5.6 Sol', provider: 'openai', context: 1050000, output: 128000, codexDefault: true },
-  { id: 'gpt-5.6-luna', name: 'GPT-5.6 Luna', provider: 'openai', context: 1050000, output: 128000, codexDefault: true },
-  { id: 'gpt-5.6-terra', name: 'GPT-5.6 Terra', provider: 'openai', context: 1050000, output: 128000, codexDefault: true },
+  { id: 'gpt-5.6-sol', name: 'GPT-5.6-Sol', provider: 'openai', context: 272000, output: 128000, codexDefault: true },
+  { id: 'gpt-5.6-terra', name: 'GPT-5.6-Terra', provider: 'openai', context: 272000, output: 128000, codexDefault: true },
+  { id: 'gpt-5.6-luna', name: 'GPT-5.6-Luna', provider: 'openai', context: 272000, output: 128000, codexDefault: true },
 
   // Highlighted recommendations.
   { id: 'alibaba:deepseek/deepseek-v4-flash-0731', name: 'DeepSeek V4 Flash 0731 (Alibaba Cloud)', provider: 'alibaba', context: 1000000, output: 384000, recommended: true, note: 'High performance, cheap, great value' },

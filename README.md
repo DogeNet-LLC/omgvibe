@@ -50,7 +50,7 @@ pre-selects the fastest reachable one:
 - `~/.codex/config.toml` — provider `omg`, `wire_api = "responses"`, base URL
   `https://<endpoint>/v1`, and `experimental_bearer_token = "<your API key>"`
 - `~/.codex/models.json` — full model catalog; defaults to `gpt-5.6-sol`,
-  `gpt-5.6-luna`, `gpt-5.6-terra`, plus every Responses-capable model
+  `gpt-5.6-terra`, `gpt-5.6-luna`, plus every Responses-capable model
   (Together/Ali/Tencent/DeepSeek/Fireworks)
 - Optional full reset: move the whole `~/.codex` to `~/.codex-backup-<timestamp>`
   and rebuild a fresh folder — offered when you hit 400 errors or a missing

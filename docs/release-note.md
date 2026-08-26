@@ -8,7 +8,7 @@
   each of `apic1.ohmycdn.com`, `api.ohmygpt.com`, and `cn2us02.opapi.win`, and
   pre-selects the reachable endpoint with the lowest average latency.
 - CodeX now writes `~/.codex/models.json` (full Responses-capable catalog) and
-  defaults to `gpt-5.6-sol` / `gpt-5.6-luna` / `gpt-5.6-terra`; the catalog path
+  defaults to `gpt-5.6-sol` / `gpt-5.6-terra` / `gpt-5.6-luna`; the catalog path
   in `config.toml` is absolute to avoid tilde-resolution issues. The API key is
   stored directly in `config.toml` as `experimental_bearer_token` (no separate
   `auth.json`). Also adds an optional whole-folder reset: `~/.codex` is moved to

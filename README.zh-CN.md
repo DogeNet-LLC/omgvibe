@@ -46,8 +46,8 @@ OhMyGPT 由三个直连 `/v1` 节点提供服务，向导会自动测试并预�
 - `~/.codex/config.toml` —— 提供方 `omg`，`wire_api = "responses"`，Base URL
   `https://<endpoint>/v1`，并以 `experimental_bearer_token = "<你的 API Key>"`
   写入密钥
-- `~/.codex/models.json` —— 完整模型目录，默认 `gpt-5.6-sol`、`gpt-5.6-luna`、
-  `gpt-5.6-terra`，并包含全部支持 Responses 的模型（Together/Ali/Tencent/
+- `~/.codex/models.json` —— 完整模型目录，默认 `gpt-5.6-sol`、`gpt-5.6-terra`、
+  `gpt-5.6-luna`，并包含全部支持 Responses 的模型（Together/Ali/Tencent/
   DeepSeek/Fireworks）
 - 可选完整重置：把整个 `~/.codex` 移动到 `~/.codex-backup-<时间戳>` 并重建全新
   目录——遇到 400 错误或模型列表显示不全时可尝试。CodeX 会话历史会保留在备份

@@ -43,8 +43,8 @@ all three APIs and are offered for every applicable target.
 | Model | Notes |
 | --- | --- |
 | `gpt-5.6-sol` | Frontier GPT-5.6 model, default for CodeX |
-| `gpt-5.6-luna` | Cost-optimized GPT-5.6 |
 | `gpt-5.6-terra` | Balanced GPT-5.6 |
+| `gpt-5.6-luna` | Cost-optimized GPT-5.6 |
 
 ### Claude Code defaults
 
@@ -65,8 +65,8 @@ Haiku slots; other supported models can be enabled in the wizard.
 ### OpenAI (CodeX only)
 
 - `gpt-5.6-sol`
-- `gpt-5.6-luna`
 - `gpt-5.6-terra`
+- `gpt-5.6-luna`
 
 ### Together AI
 
