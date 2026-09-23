@@ -46,6 +46,12 @@ OhMyGPT は 3 つの直結 `/v1` エンドポイントで提供されます。�
 ## 生成される設定
 
 ### CodeX（Responses API）
+
+ウィザードには独立した **CodeX 特別価格チャンネル** の選択肢もあります。これは
+`~/.codex/config.toml` のみを更新し、`~/.codex/models.json` の生成・上書きは行い
+ません。認証は `experimental_bearer_token` を使用し、通常の CodeX オプションは
+引き続き完全なモデルカタログを生成します。
+
 - `@openai/codex` をインストール / 更新
 - `~/.codex/config.toml` — プロバイダー `omg`、`wire_api = "responses"`、
   Base URL `https://<endpoint>/v1`、および
@@ -84,8 +90,11 @@ OhMyGPT は 3 つの直結 `/v1` エンドポイントで提供されます。�
 - CodeWhale：<./docs/cli-docs/codewhale-config.md>
 
 ## ローカライズ
+- デフォルト README：日本語（本ファイル）
 - 英語 README: [README.md](README.md)
 - 简体中文 README: [README.zh-CN.md](README.zh-CN.md)
+
+CLI も同じ翻訳セットを使用し、システム言語を既定とします。
 
 ## 開発メモ
 ```bash

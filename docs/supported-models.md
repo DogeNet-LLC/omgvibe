@@ -4,7 +4,10 @@
 lists the models the wizard knows about, grouped by provider, and explains which
 are enabled by default for each CLI.
 
-All models are served through direct endpoints (no special-pricing routes):
+All models below are served through the direct endpoints (no special-pricing
+routes). The wizard additionally offers a separate **CodeX special-pricing
+channel** target, which uses its own `<endpoint>/api/v1/ai/openai/codex-omg/v1`
+base URL and does not generate `models.json`:
 
 | Endpoint | Target audience |
 | --- | --- |

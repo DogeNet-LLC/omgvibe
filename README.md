@@ -46,6 +46,12 @@ pre-selects the fastest reachable one:
 ## What Gets Configured
 
 ### CodeX (Responses API)
+
+The wizard also offers a separate **CodeX special-pricing channel** target. It
+only rewrites `~/.codex/config.toml` — it never creates or overwrites
+`~/.codex/models.json` — and authenticates with `experimental_bearer_token`;
+the regular CodeX option still writes the full model catalog.
+
 - Install/update `@openai/codex`
 - `~/.codex/config.toml` — provider `omg`, `wire_api = "responses"`, base URL
   `https://<endpoint>/v1`, and `experimental_bearer_token = "<your API key>"`
