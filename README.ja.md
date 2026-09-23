@@ -50,9 +50,9 @@ OhMyGPT は 3 つの直結 `/v1` エンドポイントで提供されます。�
 - `~/.codex/config.toml` — プロバイダー `omg`、`wire_api = "responses"`、
   Base URL `https://<endpoint>/v1`、および
   `experimental_bearer_token = "<あなたの API Key>"` でキーを保存
-- `~/.codex/models.json` — モデルカタログ。デフォルトは `gpt-5.6-sol`・
+- `~/.codex/models.json` — モデルカタログ。デフォルトは `gpt-6-sol`・
   `gpt-5.6-terra`・`gpt-5.6-luna` と、Responses 対応の全モデル
-  （Together/Ali/Tencent/DeepSeek/Fireworks）
+  （GPT-6/GPT-5.6、Together/Ali/Tencent/DeepSeek/Fireworks）
 - オプションの完全リセット：`~/.codex` 全体を `~/.codex-backup-<timestamp>` へ
   移動して再構築——400 エラーやモデル一覧の不具合が起きた場合に選択できます。
   CodeX の会話履歴はバックアップフォルダー内に保持され、削除されません。

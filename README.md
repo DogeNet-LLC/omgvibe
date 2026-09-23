@@ -49,9 +49,9 @@ pre-selects the fastest reachable one:
 - Install/update `@openai/codex`
 - `~/.codex/config.toml` — provider `omg`, `wire_api = "responses"`, base URL
   `https://<endpoint>/v1`, and `experimental_bearer_token = "<your API key>"`
-- `~/.codex/models.json` — full model catalog; defaults to `gpt-5.6-sol`,
+- `~/.codex/models.json` — full model catalog; defaults to `gpt-6-sol`,
   `gpt-5.6-terra`, `gpt-5.6-luna`, plus every Responses-capable model
-  (Together/Ali/Tencent/DeepSeek/Fireworks)
+  (GPT-6/GPT-5.6, Together/Ali/Tencent/DeepSeek/Fireworks)
 - Optional full reset: move the whole `~/.codex` to `~/.codex-backup-<timestamp>`
   and rebuild a fresh folder — offered when you hit 400 errors or a missing
   model list. Your CodeX chat history is preserved in the backup folder.

@@ -436,10 +436,16 @@ const modelChoiceDescription = (m: ModelEntry): string => {
 };
 
 const orderModels = (list: ModelEntry[], preferredIds: string[]): ModelEntry[] => {
-  const preferred = preferredIds
-    .map((id) => modelById(id))
-    .filter((m): m is ModelEntry => m !== undefined);
-  const rest = list.filter((m) => !preferredIds.includes(m.id));
+  const byId = new Map(list.map((m) => [m.id, m]));
+  const seen = new Set<string>();
+  const preferred: ModelEntry[] = [];
+  for (const id of preferredIds) {
+    const match = byId.get(id);
+    if (!match || seen.has(id)) continue;
+    seen.add(id);
+    preferred.push(match);
+  }
+  const rest = list.filter((m) => !seen.has(m.id));
   return [...preferred, ...rest];
 };
 
@@ -448,6 +454,11 @@ const RECOMMENDED_IDS = [
   'alibaba:deepseek/deepseek-v4-pro-0813',
   'tencent/glm-5.3',
   'fireworks/kimi-k3',
+  'gpt-6-sol',
+  'azure:openai/gpt-6-sol',
+  'gpt-6-luna',
+  'azure:openai/gpt-6-luna',
+  'claude-opus-5-5',
 ];
 
 const CLAUDE_DEFAULT_IDS = ['claude-opus-5', 'claude-sonnet-5', 'claude-fable-5'];

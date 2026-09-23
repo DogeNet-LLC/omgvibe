@@ -30,11 +30,13 @@ The three native APIs are Responses (`/v1/responses`), Chat Completions
 | DeepSeek | ✅ | ✅ | ✅ |
 | Fireworks | ✅ | ✅ | ✅ |
 
-OpenAI's gpt-5.6 models speak Responses + Chat Completions but not Messages, so
-they are only offered for **CodeX**. Anthropic's models speak Messages + Chat
-Completions but not Responses, so they are never offered for CodeX. All other
-providers (Together AI, Alibaba Cloud, Tencent Cloud, DeepSeek, Fireworks) speak
-all three APIs and are offered for every applicable target.
+OpenAI's GPT-6 / gpt-5.6 models speak Responses + Chat Completions but not
+Messages, so they are offered for **CodeX** only. (Their Chat Completions route
+accepts only `max_completion_tokens`, while OpenCode and CodeWhale always send
+`max_tokens`, so those two cannot call them either.) Anthropic's models speak
+Messages + Chat Completions but not Responses, so they are never offered for
+CodeX. All other providers (Together AI, Alibaba Cloud, Tencent Cloud, DeepSeek,
+Fireworks) speak all three APIs and are offered for every applicable target.
 
 ## Defaults & recommendations
 
@@ -42,7 +44,7 @@ all three APIs and are offered for every applicable target.
 
 | Model | Notes |
 | --- | --- |
-| `gpt-5.6-sol` | Frontier GPT-5.6 model, default for CodeX |
+| `gpt-6-sol` | Frontier GPT-6 model (Azure-served), default for CodeX |
 | `gpt-5.6-terra` | Balanced GPT-5.6 |
 | `gpt-5.6-luna` | Cost-optimized GPT-5.6 |
 
@@ -59,18 +61,23 @@ Haiku slots; other supported models can be enabled in the wizard.
 | `alibaba:deepseek/deepseek-v4-pro-0813` | Pricier, higher-performance domestic model |
 | `tencent/glm-5.3` | Pricier, higher-performance domestic model |
 | `fireworks/kimi-k3` | High-intelligence domestic model, pricier, served by Fireworks AI |
+| `gpt-6-sol` | Frontier GPT-6, Azure-served; the CodeX default |
+| `azure:openai/gpt-6-sol` | GPT-6 Sol reached through the Azure route |
+| `gpt-6-luna` | Cost-optimized GPT-6 for high-volume workloads |
+| `azure:openai/gpt-6-luna` | GPT-6 Luna reached through the Azure route |
+| `claude-opus-5-5` | Cheaper long-running agentic coding, adaptive thinking always on |
 
 ## Full catalog
 
 ### OpenAI / Azure (CodeX only)
 
-- `gpt-5.6-sol`
-- `gpt-5.6-terra`
-- `gpt-5.6-luna`
 - `gpt-6-sol`
 - `azure:openai/gpt-6-sol`
 - `gpt-6-luna`
 - `azure:openai/gpt-6-luna`
+- `gpt-5.6-sol`
+- `gpt-5.6-terra`
+- `gpt-5.6-luna`
 
 ### Together AI
 
