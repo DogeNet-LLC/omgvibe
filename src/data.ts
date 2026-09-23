@@ -53,7 +53,10 @@ export const baseURLOf = (endpoint: EndpointDef) => `${endpoint.url}/v1`;
 /**
  * Wire-API capability rules:
  * - Anthropic's own models speak Messages + Chat Completions, not Responses.
- * - OpenAI's gpt-5.6 family speaks Responses + Chat Completions, not Messages.
+ * - OpenAI's gpt-5.6 / GPT-6 family speaks Responses + Chat Completions, not
+ *   Messages. The relay's Chat Completions route rejects `max_tokens` for this
+ *   family and only accepts `max_completion_tokens`, which OpenCode / CodeWhale
+ *   always send as `max_tokens` — so they stay CodeX-only in practice.
  * - Everything else (Together, Alibaba, Tencent, DeepSeek, Fireworks) speaks
  *   all three native APIs.
  */
@@ -72,8 +75,9 @@ const PROVIDER_GROUP: Record<ProviderKey, string> = {
 };
 
 /**
- * Full model catalog, in a curated order. The first three entries are the
- * CodeX defaults; the next four are the highlighted recommendations; the rest
+ * Full model catalog, in a curated order. The first four entries are the GPT-6
+ * family (gpt-6-sol is the CodeX default); the next three are the remaining CodeX
+ * defaults (gpt-5.6); the next four are the highlighted recommendations; the rest
  * follow provider grouping so pickers stay readable.
  */
 const RAW_MODELS: Array<{
@@ -86,8 +90,14 @@ const RAW_MODELS: Array<{
   note?: string;
   codexDefault?: boolean;
 }> = [
-  // CodeX defaults (OpenAI gpt-5.6 family).
-  { id: 'gpt-5.6-sol', name: 'GPT-5.6-Sol', provider: 'openai', context: 272000, output: 128000, codexDefault: true },
+  // CodeX default + GPT-6 family: OpenAI models served through Azure.
+  { id: 'gpt-6-sol', name: 'GPT-6 Sol', provider: 'openai', context: 1050000, output: 128000, recommended: true, codexDefault: true },
+  { id: 'azure:openai/gpt-6-sol', name: 'GPT-6 Sol (Azure)', provider: 'openai', context: 1050000, output: 128000, recommended: true },
+  { id: 'gpt-6-luna', name: 'GPT-6 Luna', provider: 'openai', context: 1050000, output: 128000, recommended: true },
+  { id: 'azure:openai/gpt-6-luna', name: 'GPT-6 Luna (Azure)', provider: 'openai', context: 1050000, output: 128000, recommended: true },
+
+  // Remaining CodeX defaults (OpenAI gpt-5.6 family).
+  { id: 'gpt-5.6-sol', name: 'GPT-5.6-Sol', provider: 'openai', context: 272000, output: 128000 },
   { id: 'gpt-5.6-terra', name: 'GPT-5.6-Terra', provider: 'openai', context: 272000, output: 128000, codexDefault: true },
   { id: 'gpt-5.6-luna', name: 'GPT-5.6-Luna', provider: 'openai', context: 272000, output: 128000, codexDefault: true },
 
@@ -127,6 +137,7 @@ const RAW_MODELS: Array<{
 
   // Anthropic.
   { id: 'claude-opus-5', name: 'Claude Opus 5', provider: 'anthropic', context: 1000000, output: 128000 },
+  { id: 'claude-opus-5-5', name: 'Claude Opus 5.5', provider: 'anthropic', context: 1000000, output: 128000, recommended: true },
   { id: 'claude-sonnet-5', name: 'Claude Sonnet 5', provider: 'anthropic', context: 1000000, output: 128000 },
   { id: 'claude-fable-5', name: 'Claude Fable 5', provider: 'anthropic', context: 1000000, output: 128000 },
   { id: 'claude-opus-4-8', name: 'Claude Opus 4.8', provider: 'anthropic', context: 1000000, output: 128000 },
