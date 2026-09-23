@@ -23,6 +23,7 @@ import {
 } from './data';
 import {
   buildCodexConfig,
+  buildCodexSpecialConfig,
   buildCodexModelsJson,
   buildClaudeSettings,
   buildCodeWhaleConfig,
@@ -30,7 +31,7 @@ import {
 } from './generators';
 
 type Language = 'en' | 'zh' | 'ja';
-type Target = 'codex' | 'claude' | 'opencode' | 'codewhale';
+type Target = 'codex' | 'codex-special' | 'claude' | 'opencode' | 'codewhale';
 type EndpointId = 'cdn' | 'us' | 'cn';
 
 interface Messages {
@@ -81,6 +82,7 @@ interface Messages {
 
 const INSTALL_PACKAGES: Record<Target, string> = {
   codex: '@openai/codex',
+  'codex-special': '@openai/codex',
   claude: '@anthropic-ai/claude-code',
   opencode: 'opencode-ai',
   codewhale: 'codewhale',
@@ -99,6 +101,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
     targetPrompt: 'Which CLI do you want to configure today?',
     targets: {
       codex: 'CodeX (OpenAI coding assistant)',
+      'codex-special': 'CodeX special-pricing channel (95% off, may be unstable; no models.json)',
       claude: 'Claude Code (Anthropic)',
       opencode: 'OpenCode (opencode-ai)',
       codewhale: 'CodeWhale (codewhale)',
@@ -160,6 +163,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
     targetPrompt: '你想要配置哪一个 CLI？',
     targets: {
       codex: 'CodeX（OpenAI 代码助手）',
+      'codex-special': 'CodeX 特价渠道（95% off，可能不稳定；不生成 models.json）',
       claude: 'Claude Code（Anthropic）',
       opencode: 'OpenCode（opencode-ai）',
       codewhale: 'CodeWhale（codewhale）',
@@ -220,6 +224,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
     targetPrompt: 'どの CLI を設定しますか？',
     targets: {
       codex: 'CodeX（OpenAI のコーディング支援）',
+      'codex-special': 'CodeX 特別価格チャンネル（95% off、不安定な場合あり；models.json なし）',
       claude: 'Claude Code（Anthropic）',
       opencode: 'OpenCode（opencode-ai）',
       codewhale: 'CodeWhale（codewhale）',
@@ -699,6 +704,20 @@ const configureCodex = async (lang: Language, apiKey: string, endpoint: Endpoint
   finish(lang, 'codex');
 };
 
+const configureCodexSpecial = async (lang: Language, apiKey: string, endpoint: EndpointDef) => {
+  const messages = TRANSLATIONS[lang];
+  console.log(kleur.yellow(messages.targets['codex-special']));
+  console.log();
+  await confirmOverwrite(lang);
+  const configPath = path.join(homedir(), '.codex', 'config.toml');
+  console.log();
+  console.log(kleur.cyan(messages.writingConfig));
+  logBackup(lang, await backupFile(configPath), configPath);
+  await writeFileSafely(configPath, buildCodexSpecialConfig(endpoint, 'gpt-6-astra', apiKey));
+  console.log(kleur.green(messages.configWritten(configPath)));
+  finish(lang, 'codex-special');
+};
+
 // --- Claude Code ---
 
 const configureClaude = async (lang: Language, apiKey: string, endpoint: EndpointDef) => {
@@ -882,6 +901,7 @@ const main = async () => {
       message: messages.targetPrompt,
       choices: [
         { title: messages.targets.codex, value: 'codex' },
+        { title: messages.targets['codex-special'], value: 'codex-special' },
         { title: messages.targets.claude, value: 'claude' },
         { title: messages.targets.opencode, value: 'opencode' },
         { title: messages.targets.codewhale, value: 'codewhale' },
@@ -900,6 +920,9 @@ const main = async () => {
   switch (selectedTarget) {
     case 'codex':
       await configureCodex(lang, apiKey, endpoint);
+      break;
+    case 'codex-special':
+      await configureCodexSpecial(lang, apiKey, endpoint);
       break;
     case 'claude':
       await configureClaude(lang, apiKey, endpoint);

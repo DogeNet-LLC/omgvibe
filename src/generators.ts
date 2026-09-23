@@ -285,6 +285,30 @@ export function buildCodexConfig(endpoint: EndpointDef, defaultModel: string, ap
   ].join('\n');
 }
 
+/** CodeX special-pricing channel config, which uses CodeX's built-in catalog. */
+export function buildCodexSpecialConfig(
+  endpoint: EndpointDef,
+  defaultModel: string,
+  apiKey: string,
+): string {
+  const base = `${endpoint.url}/api/v1/ai/openai/codex-omg/v1`;
+  return [
+    'model_provider = "omg-special"',
+    `model = ${tomlString(defaultModel)}`,
+    'model_reasoning_effort = "low"',
+    'disable_response_storage = true',
+    'preferred_auth_method = "apikey"',
+    'forced_login_method = "api"',
+    '',
+    '[model_providers.omg-special]',
+    'name = "omg-special"',
+    `base_url = ${tomlString(base)}`,
+    'wire_api = "responses"',
+    `experimental_bearer_token = ${tomlString(apiKey)}`,
+    '',
+  ].join('\n');
+}
+
 // ---------------------------------------------------------------------------
 // Claude Code
 // ---------------------------------------------------------------------------

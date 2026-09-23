@@ -42,6 +42,10 @@ OhMyGPT 由三个直连 `/v1` 节点提供服务，向导会自动测试并预�
 ## 配置细节
 
 ### CodeX（Responses API）
+
+向导同时提供独立的 **CodeX 特价渠道** 选项。该选项只更新
+`~/.codex/config.toml`，不会额外生成或覆盖 `~/.codex/models.json`，并使用
+`experimental_bearer_token` 完成认证；普通 CodeX 选项仍会生成完整模型目录。
 - 安装/更新 `@openai/codex`
 - `~/.codex/config.toml` —— 提供方 `omg`，`wire_api = "responses"`，Base URL
   `https://<endpoint>/v1`，并以 `experimental_bearer_token = "<你的 API Key>"`
