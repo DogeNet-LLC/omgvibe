@@ -62,11 +62,15 @@ Haiku slots; other supported models can be enabled in the wizard.
 
 ## Full catalog
 
-### OpenAI (CodeX only)
+### OpenAI / Azure (CodeX only)
 
 - `gpt-5.6-sol`
 - `gpt-5.6-terra`
 - `gpt-5.6-luna`
+- `gpt-6-sol`
+- `azure:openai/gpt-6-sol`
+- `gpt-6-luna`
+- `azure:openai/gpt-6-luna`
 
 ### Together AI
 
@@ -106,6 +110,7 @@ Haiku slots; other supported models can be enabled in the wizard.
 ### Anthropic
 
 - `claude-opus-5`
+- `claude-opus-5-5`
 - `claude-sonnet-5`
 - `claude-fable-5`
 - `claude-opus-4-8`

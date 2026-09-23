@@ -91,6 +91,12 @@ const RAW_MODELS: Array<{
   { id: 'gpt-5.6-terra', name: 'GPT-5.6-Terra', provider: 'openai', context: 272000, output: 128000, codexDefault: true },
   { id: 'gpt-5.6-luna', name: 'GPT-5.6-Luna', provider: 'openai', context: 272000, output: 128000, codexDefault: true },
 
+  // GPT-6 family: OpenAI models served through Azure. Responses-capable, so CodeX only.
+  { id: 'gpt-6-sol', name: 'GPT-6 Sol', provider: 'openai', context: 1050000, output: 128000 },
+  { id: 'azure:openai/gpt-6-sol', name: 'GPT-6 Sol (Azure)', provider: 'openai', context: 1050000, output: 128000 },
+  { id: 'gpt-6-luna', name: 'GPT-6 Luna', provider: 'openai', context: 1050000, output: 128000 },
+  { id: 'azure:openai/gpt-6-luna', name: 'GPT-6 Luna (Azure)', provider: 'openai', context: 1050000, output: 128000 },
+
   // Highlighted recommendations.
   { id: 'alibaba:deepseek/deepseek-v4-flash-0731', name: 'DeepSeek V4 Flash 0731 (Alibaba Cloud)', provider: 'alibaba', context: 1000000, output: 384000, recommended: true, note: 'High performance, cheap, great value' },
   { id: 'alibaba:deepseek/deepseek-v4-pro-0813', name: 'DeepSeek V4 Pro 0813 (Alibaba Cloud)', provider: 'alibaba', context: 1000000, output: 384000, recommended: true, note: 'Pricier but higher-performance domestic model' },
@@ -127,6 +133,7 @@ const RAW_MODELS: Array<{
 
   // Anthropic.
   { id: 'claude-opus-5', name: 'Claude Opus 5', provider: 'anthropic', context: 1000000, output: 128000 },
+  { id: 'claude-opus-5-5', name: 'Claude Opus 5.5', provider: 'anthropic', context: 1000000, output: 128000 },
   { id: 'claude-sonnet-5', name: 'Claude Sonnet 5', provider: 'anthropic', context: 1000000, output: 128000 },
   { id: 'claude-fable-5', name: 'Claude Fable 5', provider: 'anthropic', context: 1000000, output: 128000 },
   { id: 'claude-opus-4-8', name: 'Claude Opus 4.8', provider: 'anthropic', context: 1000000, output: 128000 },
