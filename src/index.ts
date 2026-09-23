@@ -77,6 +77,8 @@ interface Messages {
   noBackupNeeded: (file: string) => string;
   configWritten: (file: string) => string;
   finished: (targetLabel: string) => string;
+  /** Short label used in the success line (picker labels carry warnings). */
+  codexSpecialLabel: string;
   docsHint: string;
 }
 
@@ -149,6 +151,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
     noBackupNeeded: (file) => `No existing file found at ${file}.`,
     configWritten: (file) => `Updated ${file}`,
     finished: (targetLabel) => `✅  All done! ${targetLabel} is now configured for OhMyGPT.`,
+    codexSpecialLabel: 'CodeX (special-pricing channel)',
     docsHint: 'Tip: run `npx omgvibe` anytime you want to switch setups again.',
   },
   zh: {
@@ -210,6 +213,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
     noBackupNeeded: (file) => `未在 ${file} 发现历史文件。`,
     configWritten: (file) => `已更新 ${file}`,
     finished: (targetLabel) => `✅  完成！${targetLabel} 已配置为使用 OhMyGPT。`,
+    codexSpecialLabel: 'CodeX（特价渠道）',
     docsHint: '提示：再次执行 `npx omgvibe` 可以重新配置。',
   },
   ja: {
@@ -271,6 +275,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
     noBackupNeeded: (file) => `${file} に既存ファイルはありませんでした。`,
     configWritten: (file) => `${file} を更新しました`,
     finished: (targetLabel) => `✅  完了しました！${targetLabel} は OhMyGPT で利用できます。`,
+    codexSpecialLabel: 'CodeX（特別価格チャンネル）',
     docsHint: '`npx omgvibe` を再度実行すれば再設定できます。',
   },
 };
@@ -715,7 +720,7 @@ const configureCodexSpecial = async (lang: Language, apiKey: string, endpoint: E
   logBackup(lang, await backupFile(configPath), configPath);
   await writeFileSafely(configPath, buildCodexSpecialConfig(endpoint, 'gpt-6-astra', apiKey));
   console.log(kleur.green(messages.configWritten(configPath)));
-  finish(lang, 'codex-special');
+  finish(lang, 'codex-special', messages.codexSpecialLabel);
 };
 
 // --- Claude Code ---
@@ -859,10 +864,10 @@ const configureCodeWhale = async (lang: Language, apiKey: string, endpoint: Endp
   finish(lang, 'codewhale');
 };
 
-const finish = (lang: Language, target: Target) => {
+const finish = (lang: Language, target: Target, doneLabel?: string) => {
   const messages = TRANSLATIONS[lang];
   console.log();
-  console.log(kleur.bold().green(messages.finished(messages.targets[target])));
+  console.log(kleur.bold().green(messages.finished(doneLabel ?? messages.targets[target])));
   console.log(kleur.gray(messages.docsHint));
 };
 
