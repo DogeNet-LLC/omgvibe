@@ -31,7 +31,7 @@ import {
 } from './generators';
 
 type Language = 'en' | 'zh' | 'ja';
-type Target = 'codex' | 'codex-special' | 'claude' | 'opencode' | 'codewhale';
+type Target = 'codex' | 'codex-special' | 'claude' | 'claude-models-only' | 'opencode' | 'codewhale';
 type EndpointId = 'cdn' | 'us' | 'cn';
 
 interface Messages {
@@ -86,6 +86,7 @@ const INSTALL_PACKAGES: Record<Target, string> = {
   codex: '@openai/codex',
   'codex-special': '@openai/codex',
   claude: '@anthropic-ai/claude-code',
+  'claude-models-only': '@anthropic-ai/claude-code',
   opencode: 'opencode-ai',
   codewhale: 'codewhale',
 };
@@ -105,6 +106,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
       codex: 'CodeX (OpenAI coding assistant)',
       'codex-special': 'CodeX special-pricing channel (95% off, may be unstable; no models.json)',
       claude: 'Claude Code (Anthropic)',
+      'claude-models-only': 'Claude Code (Claude Models Only)',
       opencode: 'OpenCode (opencode-ai)',
       codewhale: 'CodeWhale (codewhale)',
     },
@@ -168,6 +170,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
       codex: 'CodeX（OpenAI 代码助手）',
       'codex-special': 'CodeX 特价渠道（95% off，可能不稳定；不生成 models.json）',
       claude: 'Claude Code（Anthropic）',
+      'claude-models-only': 'Claude Code（仅 Claude 模型）',
       opencode: 'OpenCode（opencode-ai）',
       codewhale: 'CodeWhale（codewhale）',
     },
@@ -230,6 +233,7 @@ const TRANSLATIONS: Record<Language, Messages> = {
       codex: 'CodeX（OpenAI のコーディング支援）',
       'codex-special': 'CodeX 特別価格チャンネル（95% off、不安定な場合あり；models.json なし）',
       claude: 'Claude Code（Anthropic）',
+      'claude-models-only': 'Claude Code（Claude モデルのみ）',
       opencode: 'OpenCode（opencode-ai）',
       codewhale: 'CodeWhale（codewhale）',
     },
@@ -475,7 +479,7 @@ const RECOMMENDED_IDS = [
   'claude-haiku-5-5',
 ];
 
-const CLAUDE_DEFAULT_IDS = ['claude-opus-5', 'claude-sonnet-5', 'claude-fable-5'];
+const CLAUDE_DEFAULT_IDS = ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-5-5'];
 
 /**
  * Map a user's Claude model selection onto the fixed Opus/Sonnet/Haiku and
@@ -780,6 +784,28 @@ const configureClaude = async (lang: Language, apiKey: string, endpoint: Endpoin
   finish(lang, 'claude');
 };
 
+// Same as configureClaude, but no model is written at all (Claude Code keeps its own
+// model configuration) and the model-selection step is skipped entirely.
+const configureClaudeModelsOnly = async (lang: Language, apiKey: string, endpoint: EndpointDef) => {
+  const messages = TRANSLATIONS[lang];
+
+  await confirmOverwrite(lang);
+
+  const settingsPath = path.join(homedir(), '.claude', 'settings.json');
+
+  console.log();
+  console.log(kleur.cyan(messages.writingConfig));
+
+  logBackup(lang, await backupFile(settingsPath), settingsPath);
+
+  const content = buildClaudeSettings(endpoint, apiKey);
+
+  await writeFileSafely(settingsPath, content);
+
+  console.log(kleur.green(messages.configWritten(settingsPath)));
+  finish(lang, 'claude-models-only');
+};
+
 // --- OpenCode ---
 
 const configureOpenCode = async (lang: Language, apiKey: string, endpoint: EndpointDef) => {
@@ -912,6 +938,7 @@ const main = async () => {
         { title: messages.targets.codex, value: 'codex' },
         { title: messages.targets['codex-special'], value: 'codex-special' },
         { title: messages.targets.claude, value: 'claude' },
+        { title: messages.targets['claude-models-only'], value: 'claude-models-only' },
         { title: messages.targets.opencode, value: 'opencode' },
         { title: messages.targets.codewhale, value: 'codewhale' },
       ],
@@ -935,6 +962,9 @@ const main = async () => {
       break;
     case 'claude':
       await configureClaude(lang, apiKey, endpoint);
+      break;
+    case 'claude-models-only':
+      await configureClaudeModelsOnly(lang, apiKey, endpoint);
       break;
     case 'opencode':
       await configureOpenCode(lang, apiKey, endpoint);

@@ -313,14 +313,19 @@ export function buildCodexSpecialConfig(
 // Claude Code
 // ---------------------------------------------------------------------------
 
-/** `~/.claude/settings.json`. */
+/**
+ * `~/.claude/settings.json`.
+ *
+ * Model entries are only written when a model is supplied; calling this without
+ * any model arguments leaves the whole model configuration to Claude Code itself.
+ */
 export function buildClaudeSettings(
   endpoint: EndpointDef,
   apiKey: string,
-  opusModel: string,
-  sonnetModel: string,
-  haikuModel: string,
-  subagentModel: string,
+  opusModel?: string,
+  sonnetModel?: string,
+  haikuModel?: string,
+  subagentModel?: string,
 ): string {
   const base = endpoint.url;
   const settings = {
@@ -329,11 +334,11 @@ export function buildClaudeSettings(
       OTEL_METRICS_EXPORTER: 'otlp',
       ANTHROPIC_API_KEY: apiKey,
       ANTHROPIC_BASE_URL: base,
-      ANTHROPIC_MODEL: sonnetModel,
-      ANTHROPIC_DEFAULT_OPUS_MODEL: opusModel,
-      ANTHROPIC_DEFAULT_SONNET_MODEL: sonnetModel,
-      ANTHROPIC_DEFAULT_HAIKU_MODEL: haikuModel,
-      CLAUDE_CODE_SUBAGENT_MODEL: subagentModel,
+      ...(sonnetModel ? { ANTHROPIC_MODEL: sonnetModel } : {}),
+      ...(opusModel ? { ANTHROPIC_DEFAULT_OPUS_MODEL: opusModel } : {}),
+      ...(sonnetModel ? { ANTHROPIC_DEFAULT_SONNET_MODEL: sonnetModel } : {}),
+      ...(haikuModel ? { ANTHROPIC_DEFAULT_HAIKU_MODEL: haikuModel } : {}),
+      ...(subagentModel ? { CLAUDE_CODE_SUBAGENT_MODEL: subagentModel } : {}),
       CLAUDE_CODE_EFFORT_LEVEL: 'high',
       CLAUDE_CODE_AUTO_COMPACT_WINDOW: '786432',
       CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: '1',

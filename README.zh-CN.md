@@ -61,8 +61,10 @@ OhMyGPT 由三个直连 `/v1` 节点提供服务，向导会自动测试并预�
 ### Claude Code（Messages API）
 - 安装/更新 `@anthropic-ai/claude-code`
 - `~/.claude/settings.json` —— `env` 区域指向 OhMyGPT，`ANTHROPIC_MODEL` 与
-  Opus/Sonnet/Haiku 槽位默认映射为 `claude-opus-5`、`claude-sonnet-5`、
-  `claude-fable-5`
+  Opus/Sonnet/Haiku 槽位默认映射为 `claude-opus-5-5`、`claude-sonnet-5-5`、
+  `claude-haiku-5-5`
+- 另提供 **Claude Code（仅 Claude 模型）** 选项：不写入任何模型配置，直接沿用
+  Claude Code 自身的模型，并跳过模型选择步骤
 
 ### OpenCode（Chat Completions API）
 - 安装/更新 `opencode-ai`

@@ -1,5 +1,14 @@
 # Release Notes & Publishing Guide
 
+## Unreleased
+- Added a **Claude Code (Claude Models Only)** target: the same flow as Claude
+  Code minus the model-selection step; it writes no model settings, leaving the
+  model choice to Claude Code itself.
+- Claude Code's default Opus/Sonnet/Haiku slots moved to the 5.5 generation
+  (`claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`).
+- Model catalog: added the GPT-6.1 (Azure) pair plus Claude Sonnet 5.5 and Claude
+  Haiku 5.5 (details in `docs/supported-models.md`).
+
 ## v0.2.0
 - **Default target is now CodeX** with a 4-way target picker: CodeX (default),
   Claude Code, OpenCode (`opencode-ai`), and CodeWhale (`codewhale`).

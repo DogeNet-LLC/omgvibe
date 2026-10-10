@@ -67,7 +67,9 @@ OhMyGPT は 3 つの直結 `/v1` エンドポイントで提供されます。�
 - `@anthropic-ai/claude-code` をインストール / 更新
 - `~/.claude/settings.json` — OhMyGPT を指す `env` ブロック。
   `ANTHROPIC_MODEL` と Opus/Sonnet/Haiku スロットのデフォルトは
-  `claude-opus-5`・`claude-sonnet-5`・`claude-fable-5`
+  `claude-opus-5-5`・`claude-sonnet-5-5`・`claude-haiku-5-5`
+- **Claude Code（Claude モデルのみ）** — モデル設定を一切書き込まず、Claude Code
+  自身のモデル構成に任せてモデル選択のステップを省略する 2 つ目の選択肢
 
 ### OpenCode（Chat Completions API）
 - `opencode-ai` をインストール / 更新

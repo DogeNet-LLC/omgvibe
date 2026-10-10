@@ -66,7 +66,10 @@ the regular CodeX option still writes the full model catalog.
 - Install/update `@anthropic-ai/claude-code`
 - `~/.claude/settings.json` — `env` block pointing at OhMyGPT with
   `ANTHROPIC_MODEL` and the Opus/Sonnet/Haiku slots defaulting to
-  `claude-opus-5`, `claude-sonnet-5`, `claude-fable-5`
+  `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`
+- **Claude Code (Claude Models Only)** — a second picker entry that writes no
+  model settings at all and skips the model-selection step, leaving the model
+  choice to Claude Code itself
 
 ### OpenCode (Chat Completions API)
 - Install/update `opencode-ai`
