@@ -469,6 +469,10 @@ const RECOMMENDED_IDS = [
   'gpt-6-luna',
   'azure:openai/gpt-6-luna',
   'claude-opus-5-5',
+  'gpt-6.1-sol',
+  'azure:openai/gpt-6.1-sol',
+  'claude-sonnet-5-5',
+  'claude-haiku-5-5',
 ];
 
 const CLAUDE_DEFAULT_IDS = ['claude-opus-5', 'claude-sonnet-5', 'claude-fable-5'];
