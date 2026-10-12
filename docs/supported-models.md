@@ -53,8 +53,10 @@ Fireworks) speak all three APIs and are offered for every applicable target.
 
 ### Claude Code defaults
 
-`claude-opus-5`, `claude-sonnet-5`, `claude-fable-5` map to the Opus / Sonnet /
-Haiku slots; other supported models can be enabled in the wizard.
+`claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` map to the Opus /
+Sonnet / Haiku slots; other supported models can be enabled in the wizard. The
+**Claude Code (Claude Models Only)** entry writes no model settings at all and
+skips the model-selection step, leaving the model choice to Claude Code.
 
 ### Highlighted recommendations
 
