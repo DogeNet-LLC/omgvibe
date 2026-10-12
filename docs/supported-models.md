@@ -47,7 +47,7 @@ Fireworks) speak all three APIs and are offered for every applicable target.
 
 | Model | Notes |
 | --- | --- |
-| `gpt-6-sol` | Frontier GPT-6 model (Azure-served), default for CodeX |
+| `gpt-6.1-sol` | Frontier GPT-6.1 model (Azure-served), default for CodeX |
 | `gpt-5.6-terra` | Balanced GPT-5.6 |
 | `gpt-5.6-luna` | Cost-optimized GPT-5.6 |
 
@@ -64,16 +64,21 @@ Haiku slots; other supported models can be enabled in the wizard.
 | `alibaba:deepseek/deepseek-v4-pro-0813` | Pricier, higher-performance domestic model |
 | `tencent/glm-5.3` | Pricier, higher-performance domestic model |
 | `fireworks/kimi-k3` | High-intelligence domestic model, pricier, served by Fireworks AI |
-| `gpt-6-sol` | Frontier GPT-6, Azure-served; the CodeX default |
+| `gpt-6.1-sol` | Frontier GPT-6.1, Azure-served; the CodeX default |
+| `azure:openai/gpt-6.1-sol` | GPT-6.1 Sol reached through the Azure route |
 | `azure:openai/gpt-6-sol` | GPT-6 Sol reached through the Azure route |
 | `gpt-6-luna` | Cost-optimized GPT-6 for high-volume workloads |
 | `azure:openai/gpt-6-luna` | GPT-6 Luna reached through the Azure route |
 | `claude-opus-5-5` | Cheaper long-running agentic coding, adaptive thinking always on |
+| `claude-sonnet-5-5` | Everyday coding and agentic tasks |
+| `claude-haiku-5-5` | Fastest and cheapest Claude 5.5, good for subagents |
 
 ## Full catalog
 
 ### OpenAI / Azure (CodeX only)
 
+- `gpt-6.1-sol`
+- `azure:openai/gpt-6.1-sol`
 - `gpt-6-sol`
 - `azure:openai/gpt-6-sol`
 - `gpt-6-luna`
@@ -81,6 +86,7 @@ Haiku slots; other supported models can be enabled in the wizard.
 - `gpt-5.6-sol`
 - `gpt-5.6-terra`
 - `gpt-5.6-luna`
+- `gpt-6-astra`
 
 ### Together AI
 
@@ -122,6 +128,8 @@ Haiku slots; other supported models can be enabled in the wizard.
 - `claude-opus-5`
 - `claude-opus-5-5`
 - `claude-sonnet-5`
+- `claude-sonnet-5-5`
+- `claude-haiku-5-5`
 - `claude-fable-5`
 - `claude-opus-4-8`
 - `claude-opus-4-7`

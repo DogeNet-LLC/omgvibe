@@ -75,10 +75,11 @@ const PROVIDER_GROUP: Record<ProviderKey, string> = {
 };
 
 /**
- * Full model catalog, in a curated order. The first four entries are the GPT-6
- * family (gpt-6-sol is the CodeX default); the next three are the remaining CodeX
- * defaults (gpt-5.6); the next four are the highlighted recommendations; the rest
- * follow provider grouping so pickers stay readable.
+ * Full model catalog, in a curated order. The first two entries are the GPT-6.1
+ * family (gpt-6.1-sol is the CodeX default); the next four are the GPT-6 family;
+ * the next three are the remaining CodeX defaults (gpt-5.6); the next four are the
+ * highlighted recommendations; the rest follow provider grouping so pickers stay
+ * readable.
  */
 const RAW_MODELS: Array<{
   id: string;
@@ -90,8 +91,12 @@ const RAW_MODELS: Array<{
   note?: string;
   codexDefault?: boolean;
 }> = [
-  // CodeX default + GPT-6 family: OpenAI models served through Azure.
-  { id: 'gpt-6-sol', name: 'GPT-6 Sol', provider: 'openai', context: 1050000, output: 128000, recommended: true, codexDefault: true },
+  // CodeX default + GPT-6.1 family: OpenAI models served through Azure.
+  { id: 'gpt-6.1-sol', name: 'GPT-6.1 Sol', provider: 'openai', context: 1050000, output: 128000, recommended: true, codexDefault: true },
+  { id: 'azure:openai/gpt-6.1-sol', name: 'GPT-6.1 Sol (Azure)', provider: 'openai', context: 1050000, output: 128000, recommended: true },
+
+  // GPT-6 family (previous generation).
+  { id: 'gpt-6-sol', name: 'GPT-6 Sol', provider: 'openai', context: 1050000, output: 128000, recommended: true },
   { id: 'azure:openai/gpt-6-sol', name: 'GPT-6 Sol (Azure)', provider: 'openai', context: 1050000, output: 128000, recommended: true },
   { id: 'gpt-6-luna', name: 'GPT-6 Luna', provider: 'openai', context: 1050000, output: 128000, recommended: true },
   { id: 'azure:openai/gpt-6-luna', name: 'GPT-6 Luna (Azure)', provider: 'openai', context: 1050000, output: 128000, recommended: true },
@@ -140,6 +145,8 @@ const RAW_MODELS: Array<{
   { id: 'claude-opus-5', name: 'Claude Opus 5', provider: 'anthropic', context: 1000000, output: 128000 },
   { id: 'claude-opus-5-5', name: 'Claude Opus 5.5', provider: 'anthropic', context: 1000000, output: 128000, recommended: true },
   { id: 'claude-sonnet-5', name: 'Claude Sonnet 5', provider: 'anthropic', context: 1000000, output: 128000 },
+  { id: 'claude-sonnet-5-5', name: 'Claude Sonnet 5.5', provider: 'anthropic', context: 1000000, output: 128000, recommended: true },
+  { id: 'claude-haiku-5-5', name: 'Claude Haiku 5.5', provider: 'anthropic', context: 1000000, output: 128000, recommended: true },
   { id: 'claude-fable-5', name: 'Claude Fable 5', provider: 'anthropic', context: 1000000, output: 128000 },
   { id: 'claude-opus-4-8', name: 'Claude Opus 4.8', provider: 'anthropic', context: 1000000, output: 128000 },
   { id: 'claude-opus-4-7', name: 'Claude Opus 4.7', provider: 'anthropic', context: 1000000, output: 128000 },
