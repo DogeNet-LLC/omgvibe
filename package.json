@@ -1,42 +1,48 @@
 {
   "name": "omgvibe",
-  "version": "0.2.7",
-  "description": "Interactive NPX wizard for configuring CodeX, Claude Code, OpenCode, or CodeWhale for OhMyGPT API access.",
-  "type": "commonjs",
-  "main": "dist/index.js",
+  "version": "1.0.0",
+  "description": "Run Claude Code, Codex, opencode and other coding agents on OhMyGPT with one command.",
+  "type": "module",
   "bin": {
-    "omgvibe": "dist/index.js"
+    "omgvibe": "bin/omgvibe.mjs"
   },
   "files": [
+    "bin",
     "dist"
   ],
+  "engines": {
+    "node": ">=20.12"
+  },
   "scripts": {
-    "build": "tsc",
-    "postbuild": "node -e \"require('fs').chmodSync('dist/index.js', 0o755)\"",
-    "clean": "rimraf dist",
+    "build": "node scripts/build.mjs",
+    "dev": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "test": "vitest run",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
   },
   "keywords": [
+    "ohmygpt",
+    "claude-code",
     "codex",
-    "claude",
     "opencode",
-    "codewhale",
-    "cli",
-    "omg",
-    "ohmygpt"
+    "coding-agent",
+    "llm-gateway",
+    "cli"
   ],
   "author": "DogeNet LLC",
   "license": "MIT",
-  "dependencies": {
-    "kleur": "^4.1.5",
-    "prompts": "^2.4.2"
-  },
   "devDependencies": {
+    "@clack/prompts": "^1.9.0",
+    "@types/cross-spawn": "^6.0.6",
     "@types/node": "^24.5.0",
-    "@types/prompts": "^2.4.9",
-    "rimraf": "^6.1.3",
-    "typescript": "^5.9.2"
+    "cross-spawn": "^7.0.6",
+    "esbuild": "^0.28.2",
+    "jsonc-parser": "^3.3.1",
+    "smol-toml": "^1.9.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.2",
+    "vitest": "^5.1.0"
   },
   "repository": {
     "type": "git",

@@ -1,114 +1,175 @@
 # omgvibe
+
 *言語: [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)*
 
-`omgvibe` は **CodeX**・**Claude Code**・**OpenCode**・**CodeWhale** を OhMyGPT の
-統一 `/v1` API へ接続するインタラクティブ NPX ウィザードです。言語選択・CLI の
-インストール・エンドポイントのレイテンシ計測・設定のバックアップ・API キーと
-モデル設定の書き込みまでをワンコマンドで実行します。
+Claude Code、Codex、opencode などのコーディングエージェントを、コマンド一つで [OhMyGPT](https://www.ohmygpt.com) につなぎます。
 
-## 特長
-- **インストール不要**：`npx omgvibe` だけでセットアップ開始
-- **英語 / 中国語 / 日本語に対応**、システム言語を自動検出しつつ手動切替も可能
-- **デフォルトは CodeX**（Claude Code・OpenCode・CodeWhale もすぐ切替可能）
-- 対象 CLI の最新バージョンを `npm install -g` で再インストール
-- 3 つのリレーエンドポイントに `GET /v1/models` を各 5 回実行し、到達可能かつ
-  平均レイテンシが最も低いエンドポイントを自動選択
-- 設定を上書きする前にタイムスタンプ付き `.bak` を作成
-- CodeX には完全なモデルカタログ（`models.json`）を生成し、各ターゲットに
-  デフォルト / 推奨モデルを設定
-
-## クイックスタート
-1. Node.js 18 以上と npm をインストール済みであることを確認します。
-2. ターミナルで次を実行します。
-   ```bash
-   npx omgvibe
-   ```
-3. ウィザード内で言語と対象 CLI（デフォルトは **CodeX**）を選びます。
-4. 公式の `npm install -g` を実行するかどうかを選択します。
-5. OhMyGPT の API Key（<https://www.ohmygpt.com/apis/keys> で発行）を入力します。
-6. レイテンシ計測結果を確認し、事前選択された最速エンドポイントを確定します。
-7. デフォルトモデルを選び、書き込みを確定します。
-
-> バックアップ例：`config.toml.20250101-103000.bak`。元ファイルと同じフォルダーに
-> 保存され、いつでも復元できます。
-
-## リレーエンドポイント
-
-OhMyGPT は 3 つの直結 `/v1` エンドポイントで提供されます。ウィザードがすべてを
-計測し、最速の到達可能なエンドポイントを事前選択します：
-
-| エンドポイント | 対象 |
-| --- | --- |
-| `https://apic1.ohmycdn.com` | Cloudflare Enterprise CDN — 中国本土外 && 米国外 |
-| `https://api.ohmygpt.com` | 米国直結 — 米国内 |
-| `https://cn2us02.opapi.win` | 中国本土向け最適化 CDN — 中国本土 |
-
-## 生成される設定
-
-### CodeX（Responses API）
-
-ウィザードには独立した **CodeX 特別価格チャンネル** の選択肢もあります。これは
-`~/.codex/config.toml` のみを更新し、`~/.codex/models.json` の生成・上書きは行い
-ません。認証は `experimental_bearer_token` を使用し、通常の CodeX オプションは
-引き続き完全なモデルカタログを生成します。
-
-- `@openai/codex` をインストール / 更新
-- `~/.codex/config.toml` — プロバイダー `omg`、`wire_api = "responses"`、
-  Base URL `https://<endpoint>/v1`、および
-  `experimental_bearer_token = "<あなたの API Key>"` でキーを保存
-- `~/.codex/models.json` — モデルカタログ。デフォルトは `gpt-6.1-sol`・
-  `gpt-5.6-terra`・`gpt-5.6-luna` と、Responses 対応の全モデル
-  （GPT-6/GPT-5.6、Together/Ali/Tencent/DeepSeek/Fireworks）
-- オプションの完全リセット：`~/.codex` 全体を `~/.codex-backup-<timestamp>` へ
-  移動して再構築——400 エラーやモデル一覧の不具合が起きた場合に選択できます。
-  CodeX の会話履歴はバックアップフォルダー内に保持され、削除されません。
-
-### Claude Code（Messages API）
-- `@anthropic-ai/claude-code` をインストール / 更新
-- `~/.claude/settings.json` — OhMyGPT を指す `env` ブロック。
-  `ANTHROPIC_MODEL` と Opus/Sonnet/Haiku スロットのデフォルトは
-  `claude-opus-5-5`・`claude-sonnet-5-5`・`claude-haiku-5-5`
-- **Claude Code（Claude モデルのみ）** — モデル設定を一切書き込まず、Claude Code
-  自身のモデル構成に任せてモデル選択のステップを省略する 2 つ目の選択肢
-
-### OpenCode（Chat Completions API）
-- `opencode-ai` をインストール / 更新
-- `~/.config/opencode/opencode.json` — カスタム `omg` プロバイダー
-  （`@ai-sdk/openai-compatible`）。対応モデルの大半を事前登録
-
-### CodeWhale（Chat Completions API）
-- `codewhale` をインストール / 更新
-- `~/.codewhale/config.toml` — `provider = "openai"` で OhMyGPT `base_url` を指定。
-  デフォルトは `alibaba:deepseek/deepseek-v4-flash-0731`
-  （`alibaba:deepseek/deepseek-v4-pro-0813` ほかも選択可能）
-
-全モデルカタログと各ターゲットのデフォルト値は
-[対応モデル](./docs/supported-models.md) を参照してください。
-
-## 参考ドキュメント
-- CodeX：<./docs/cli-docs/ds-codex.md>
-- Claude Code：<./docs/cli-docs/ds-claudecode.md>
-- OpenCode：<./docs/cli-docs/opencode-config-docs.md>
-- CodeWhale：<./docs/cli-docs/codewhale-config.md>
-
-## ローカライズ
-- デフォルト README：日本語（本ファイル）
-- 英語 README: [README.md](README.md)
-- 简体中文 README: [README.zh-CN.md](README.zh-CN.md)
-
-CLI も同じ翻訳セットを使用し、システム言語を既定とします。
-
-## 開発メモ
 ```bash
-npm install
-npm run lint
-npm run build
+npx omgvibe claude
 ```
 
-ビルド後は `node dist/index.js` でローカル実行できます。
+初回は OhMyGPT の API キーを尋ね、各リージョンのエンドポイントを計測して最速のものを選びます。それ以降は、キー・エンドポイント・モデルをそのセッションの引数と環境変数として渡した状態でエージェントが起動します。エージェント自身の設定ファイルには手を触れません。
+
+Node.js 20.12 以上が必要です。`npx` を使わずにインストールする場合は `npm install -g omgvibe`。
+
+## コマンド
+
+| コマンド | 内容 |
+| --- | --- |
+| `omgvibe` | 以下の機能をまとめたメニューを開く |
+| `omgvibe <agent> [引数…]` | このセッションだけ OhMyGPT でエージェントを起動する |
+| `omgvibe setup [agent…]` | エージェント自身の設定に OhMyGPT を書き込み、omgvibe なしでも使えるようにする |
+| `omgvibe reset [agent…]` | `setup` の変更を元に戻す |
+| `omgvibe login` / `logout` | API キーを保存、または削除する |
+| `omgvibe models [検索語…]` | 使えるモデルをコンテキスト長と料金つきで一覧する |
+| `omgvibe status` | サインイン状態、エンドポイント、インストール済みエージェントを表示する |
+| `omgvibe doctor` | キー、エンドポイント、3 種類の API プロトコルを無料で確認する |
+| `omgvibe endpoint [リージョン\|url\|auto]` | エンドポイントを計測して選ぶ |
+| `omgvibe update` | omgvibe を更新する |
+
+## 対応エージェント
+
+| コマンド | エージェント | プロトコル | `setup` |
+| --- | --- | --- | --- |
+| `omgvibe claude` | [Claude Code](https://code.claude.com/docs) | Anthropic Messages | 対応 |
+| `omgvibe codex` | [Codex](https://developers.openai.com/codex) | OpenAI Responses | 対応 |
+| `omgvibe opencode` | [opencode](https://opencode.ai) 1.x / 2.x | OpenAI Chat Completions | 対応 |
+| `omgvibe kilo` | [Kilo Code](https://kilo.ai) | OpenAI Chat Completions | 対応 |
+| `omgvibe qwen` | [Qwen Code](https://github.com/QwenLM/qwen-code) | OpenAI Chat Completions | セッションのみ |
+| `omgvibe pi` | [Pi](https://pi.dev) | OpenAI Chat Completions | 対応 |
+| `omgvibe codewhale` | [CodeWhale](https://github.com/codewhale-hq/CodeWhale) | OpenAI Chat Completions | 対応 |
+
+エージェントが入っていない場合は、インストール用のコマンドを表示します。ターミナルでは、その場で実行するかどうかも尋ねます。
+
+エージェント名より後ろの引数は、omgvibe のオプションではない最初のものから、そのままエージェントに渡ります。
+
+```bash
+omgvibe claude -p "この diff をレビューして"
+omgvibe codex --model openai/gpt-5.5 exec "失敗しているテストを直して"
+omgvibe claude -- --model opus        # -- の後ろは --model も Claude Code に渡る
+```
+
+各エージェントに実際に渡す内容は [docs/agents.md](docs/agents.md) にまとめています。
+
+## モデルを選ぶ
+
+OhMyGPT のチャットモデルはどれも 3 種類のプロトコルすべてに対応しているため、どのモデルもどのエージェントで使えます。
+
+```bash
+omgvibe models                 # すべてのチャットモデル（性能の高い順）
+omgvibe models claude sonnet   # 検索
+omgvibe codex --model zhipu/glm-5.3
+omgvibe opencode --pick        # 検索できる一覧から選ぶ。選んだモデルは記憶される
+```
+
+モデル ID は毎週変わる最新のカタログ（`GET /v1/models`）から取得するため、omgvibe 自体はモデル一覧を持ちません。名前の打ち間違いは補正します（`claude-sonet-5-5` → `anthropic/claude-sonnet-5-5`）。存在しないバージョンを別のバージョンに置き換えることはしません。
+
+`--model` を付けない場合：
+
+- **Claude Code** は自身の既定モデルを使い、`opus`・`sonnet`・`haiku` のエイリアスもそのまま使えます。OhMyGPT は Claude Code が送る Claude のモデル名を受け付けます。
+- **Codex** は `openai/gpt-5.5`、それ以外のエージェントは `anthropic/claude-sonnet-5-5` を使います。提供が終了した場合は、カタログが示す後継モデルに切り替わります。
+- `--pick`、メニュー、`setup` で選んだモデルは、そのエージェントの既定として記憶されます。
+
+## セッションか setup か
+
+`omgvibe <agent>` はディスク上の何も変更しません。同じエージェントを別のプロバイダーでも使う場合や、そのマシンの設定を変えたくない場合に向いています。
+
+`omgvibe setup` は、起動方法にかかわらず（素の `claude`、Codex のデスクトップアプリ、IDE 拡張）エージェントを OhMyGPT で使いたい場合のためのものです。
+
+```bash
+omgvibe setup claude codex     # 引数なしなら一覧から選ぶ
+omgvibe reset codex
+```
+
+`setup` は必要な項目だけを書き換え、ファイルのそれ以外の部分はコメントも含めてそのまま残します。適用前に変更内容を表示し、各ファイルのコピーを `~/.omgvibe/backups/` に保存し、各項目の元の値を記録します。`reset` はその値を戻します。`setup` の後に自分で変更した項目には触れず、その旨を表示します。
+
+## サインイン
+
+`omgvibe login` は [API キーのページ](https://www.ohmygpt.com/keys)を開き、貼り付けたキーを 1 回のリクエストで確認します。キーは `~/.omgvibe/config.json` に、本人だけが読める形で保存されます。
+
+保存したキーがなければ、環境変数 `OHMYGPT_API_KEY` を読みます。`--key` はその実行だけに使われます。優先順位は `--key`、`OHMYGPT_API_KEY`、保存済みキーの順です。
+
+```bash
+OHMYGPT_API_KEY=sk-... npx omgvibe claude -p "hello"     # CI やコンテナ
+```
+
+## エンドポイント
+
+OhMyGPT は同じ API を複数のリージョンから提供しています。omgvibe は確立済みの接続で各エンドポイントを計測して最速のものを使い、週に一度計測し直します。
+
+| リージョン | ベース URL |
+| --- | --- |
+| `cloudflare` Cloudflare グローバル高速化 | `https://apic1.ohmycdn.com` |
+| `us` 米国直結 | `https://api.ohmygpt.com` |
+| `asia` アジア最適化 | `https://c-z0-api-01.hash070.com` |
+| `cn2` アジア（中国本土向けに最適化） | `https://cn2us02.opapi.win` |
+| `sg` シンガポール | `https://api-ep-sg1.ohmygpt.com` |
+| `eu` ヨーロッパ（ドイツ） | `https://api-ep-eu1.ohmygpt.com` |
+
+```bash
+omgvibe endpoint          # 計測して選ぶ
+omgvibe endpoint cn2      # 常にこれを使う
+omgvibe endpoint auto     # 最速の自動選択に戻す
+```
+
+`--endpoint <リージョン|url>` または環境変数 `OHMYGPT_BASE_URL` は、その実行だけのエンドポイントを指定します。omgvibe 自身のリクエストも、起動するエージェントと同じく `HTTPS_PROXY` / `HTTP_PROXY` を通り、`NO_PROXY` に従います。そのため、エージェントが実際に使う経路で計測されます。
+
+## 接続の確認
+
+```text
+$ omgvibe doctor
+OhMyGPT への接続を確認しています  米国直結  https://api.ohmygpt.com
+  ✓ エンドポイント                      到達可能、128 ms
+  ✓ API キー                            有効、アカウント #1
+  ✓ モデル一覧                          208 モデル
+  ✓ OpenAI Chat Completions リクエスト  394 ms で応答
+  ✓ OpenAI Responses リクエスト         391 ms で応答
+  ✓ Anthropic Messages リクエスト       396 ms で応答
+
+すべて正常です。  この確認には無料のテストモデルを使うため、料金はかかりません。
+```
+
+3 つのリクエストは無料のテストモデル `ohmygpt/mock` に送られます。`status` と `doctor` は `--json` に対応しています。
+
+## オプション
+
+| オプション | 意味 |
+| --- | --- |
+| `-m`、`--model <id>` | 使うモデル |
+| `--pick` | 検索できる一覧からモデルを選ぶ |
+| `--endpoint <リージョン\|url>` | 今回使うエンドポイント |
+| `--key <key>` | 今回使う API キー |
+| `--lang <en\|zh\|ja>` | 言語。既定はシステムのロケールに従う |
+| `--install` | 未インストールのエージェントを確認なしでインストールする |
+| `-y`、`--yes` | 既定値をそのまま使い、質問しない |
+| `--json` | `models`、`status`、`doctor`、`endpoint` を JSON で出力する |
+
+エージェント名の後ろで omgvibe が受け取るのは `--model`/`-m`、`--pick`、`--endpoint`、`--key`、`--lang`、`--install`、`--yes` だけです。そのため `omgvibe claude --help` は Claude Code のヘルプを表示します。
+
+## omgvibe がリクエストに加えるもの
+
+エージェントがカスタムヘッダーに対応している場合、omgvibe は `X-OhMyGPT-Title` にエージェント名（例：`Claude Code`）を入れ、`HTTP-Referer` と `X-OhMyGPT-Categories: cli-agent` を付けます。これにより、[利用状況](https://www.ohmygpt.com/usage)をエージェントごとに分けて確認できます。それ以外は何も加えません。
+
+omgvibe はテレメトリを送信しません。新しいバージョンの有無を、最大で 1 日 1 回 npm レジストリに問い合わせます。`OMGVIBE_NO_UPDATE_CHECK=1` で無効にできます。
+
+## 0.2 からの移行
+
+1.0 ではウィザードがコマンドに置き換わりました。`npx omgvibe` は引き続きガイド付きのメニューを開きます。
+
+- CodeX と Claude Code の特別価格チャンネルは提供を終了したため、削除しました。
+- 0.2 は設定ファイル全体を上書きしていました。1.0 は個々の項目だけを書き換え、元に戻せます。
+- 0.2 は固定のモデル一覧を同梱していました。1.0 は最新のカタログを読み込みます。モデル ID は `creator/model` の形式です。
+
+0.2 が書き込んだ設定は、エンドポイントが残っているかぎりそのまま使えます。消したい場合は、0.2 が各設定ファイルの隣に残した `.bak` を戻すか、0.2 が書き込んだ内容を削除してください。`~/.codex/config.toml` では `model_provider = "omg"` の行、`[model_providers.omg]` テーブル、`model_catalog_json`、および `~/.codex/models.json`。`~/.claude/settings.json` では `env` 配下の `ANTHROPIC_*` と `apiKeyHelper` です。
+
+## 開発
+
+[docs/development.md](docs/development.md) を参照してください。変更履歴は [CHANGELOG.md](CHANGELOG.md) にあります。
 
 ## サポート
-- API キー / 請求関連: <https://www.ohmygpt.com/apis/keys>
-- サポート窓口: help@ohmygpt.com
 
-ライセンスは MIT（[LICENSE](LICENSE) を参照）。
+- キーと料金：<https://www.ohmygpt.com/keys>
+- ドキュメント：<https://www.ohmygpt.com/docs>
+- 不具合の報告：<https://github.com/DogeNet-LLC/omgvibe/issues> または help@ohmygpt.com
+
+MIT ライセンス。[LICENSE](LICENSE) を参照してください。

@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log*
 dist
+*.tgz
 .DS_Store
 
 .idea/
