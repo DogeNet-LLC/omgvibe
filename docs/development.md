@@ -9,7 +9,9 @@ npm run build             # bundles to dist/cli.mjs
 node bin/omgvibe.mjs status
 ```
 
-The published package is `bin/omgvibe.mjs` plus one bundled file, with no runtime dependencies to install. `bin/omgvibe.mjs` checks the Node version before loading the bundle.
+The published package is the two entry files in `bin/` plus one bundled file, with no runtime dependencies to install. `bin/omgvibe.mjs` checks the Node version before loading the bundle. `bin/ov.mjs` is the short name: it records that `ov` was typed and loads `bin/omgvibe.mjs`.
+
+Every command line shown to the user goes through `cmd()` in `src/core/invocation.ts`, so it starts with what the user typed: `ov`, `omgvibe` or `npx omgvibe`. Do not write `omgvibe <command>` into a message.
 
 ## Layout
 
@@ -59,11 +61,13 @@ npm install -g /tmp/omgvibe-vm/omgvibe-*.tgz        # from `npm pack` on the hos
 
 Then, cheapest first:
 
-1. `omgvibe doctor` — the free test model through all three protocols.
-2. Each agent on the free test model: `omgvibe qwen --model ohmygpt/mock "ping"`. It costs nothing and proves the agent's own request shape gets through the gateway. The mock answers every tool-carrying request with a tool call first, which Claude Code keeps following, so stop it once the reply is printed.
-3. One short task per agent on the cheapest real model, to see a real tool call. `omgvibe models flash` lists candidates.
+1. `ov doctor` — the free test model through all three protocols.
+2. Each agent on the free test model: `ov qwen --model ohmygpt/mock "ping"`. It costs nothing and proves the agent's own request shape gets through the gateway. The mock answers every tool-carrying request with a tool call first, which Claude Code keeps following, so stop it once the reply is printed.
+3. One short task per agent on the cheapest real model, to see a real tool call. `ov models flash` lists candidates.
 
 Keep the key in a file inside the VM and pass it as `OHMYGPT_API_KEY`; do not put it in the repository.
+
+To test the install that `npx omgvibe` offers before a release exists on npm, point it at the tarball: `OMGVIBE_PACKAGE_SPEC=/tmp/omgvibe-vm/omgvibe-1.0.0.tgz`.
 
 ## Release
 

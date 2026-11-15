@@ -3,6 +3,7 @@ import * as clack from '@clack/prompts';
 import { AGENTS, findAgent, locate, readVersion } from '../agents';
 import type { AgentDefinition, FileEdit } from '../agents/types';
 import { agentModels } from '../core/catalog';
+import { cmd } from '../core/invocation';
 import { tildify, userHome } from '../core/paths';
 import {
   attributionFor,
@@ -56,7 +57,7 @@ export async function setupCommand(
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<void> {
   const interactive = isInteractive() && !options.yes;
-  if (names.length === 0 && !interactive) throw new CliError(t().errNeedsTerminal('omgvibe setup'), ['omgvibe setup claude']);
+  if (names.length === 0 && !interactive) throw new CliError(t().errNeedsTerminal(cmd('setup')), [cmd('setup claude')]);
   if (interactive) clack.intro(t().setupIntro);
 
   const { key } = await ensureKey(options, env);
@@ -134,7 +135,7 @@ export async function setupCommand(
     } catch (error) {
       if (!(error instanceof SetupError)) throw error;
       throw new CliError(t().setupFailed(tildify(error.file, env), error.reason), [
-        t().setupFailedHint(`omgvibe ${agent.id}`),
+        t().setupFailedHint(cmd(agent.id)),
       ]);
     }
     for (const file of applied) {
@@ -146,7 +147,7 @@ export async function setupCommand(
     if (model) await updateConfig((current) => rememberModel(current, agent.id, model.id), env);
   }
 
-  const undo = t().setupUndoHint(agents.length === 1 ? `omgvibe reset ${agents[0]!.id}` : 'omgvibe reset');
+  const undo = t().setupUndoHint(cmd(agents.length === 1 ? `reset ${agents[0]!.id}` : 'reset'));
   if (interactive) clack.outro(undo);
   else process.stdout.write(`${undo}\n`);
 }

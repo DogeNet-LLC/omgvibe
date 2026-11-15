@@ -37,7 +37,7 @@ export interface Options {
 
 export const BASE_URL_ENV = 'OHMYGPT_BASE_URL';
 
-/** Sent with each request so usage can be broken down per agent. */
+/** Sent with each request to name the agent that made it. */
 export const ATTRIBUTION_URL = 'https://github.com/DogeNet-LLC/omgvibe';
 
 export function attributionFor(agent: AgentDefinition): Record<string, string> {

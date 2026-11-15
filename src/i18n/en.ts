@@ -1,3 +1,5 @@
+import { cmd } from '../core/invocation';
+
 /**
  * English is the source language: its shape is the `Messages` type the other
  * languages must match, so a missing or extra key fails the type check.
@@ -28,7 +30,7 @@ export const en = {
   helpCmdDoctor: 'Check the connection end to end, free of charge',
   helpCmdEndpoint: 'Measure the endpoints and choose one',
   helpCmdUpdate: 'Update omgvibe',
-  helpOptModel: 'Model to use; any ID from `omgvibe models`',
+  helpOptModel: `Model to use; any ID from \`${cmd('models')}\``,
   helpOptPick: 'Choose the model from a searchable list',
   helpOptEndpoint: 'Endpoint region or base URL for this run',
   helpOptKey: 'API key for this run (default: saved key or $OHMYGPT_API_KEY)',
@@ -45,7 +47,7 @@ export const en = {
 
   // ---- errors ----
   errUnknownCommand: (name: string) => `Unknown command or agent: ${name}`,
-  errUnknownCommandHint: 'Run `omgvibe --help` to see the commands and agents.',
+  errUnknownCommandHint: `Run \`${cmd('--help')}\` to see the commands and agents.`,
   errDidYouMean: (name: string) => `Did you mean \`${name}\`?`,
   errOptionNeedsValue: (option: string) => `${option} needs a value.`,
   errUnknownOption: (option: string) => `Unknown option: ${option}`,
@@ -53,7 +55,7 @@ export const en = {
   errBadEndpoint: (value: string) =>
     `Not an endpoint: ${value}. Use a region (cloudflare, us, asia, cn2, sg, eu) or a base URL.`,
   errNotSignedIn: 'No API key yet.',
-  errNotSignedInHint: 'Run `omgvibe login`, or set OHMYGPT_API_KEY.',
+  errNotSignedInHint: `Run \`${cmd('login')}\`, or set OHMYGPT_API_KEY.`,
   errNeedsTerminal: (command: string) => `\`${command}\` needs an interactive terminal.`,
   errConfig: (detail: string) => `Could not read omgvibe's settings: ${detail}`,
 
@@ -82,7 +84,7 @@ export const en = {
   logoutNothing: 'No saved key to remove.',
   logoutEnvStill: 'OHMYGPT_API_KEY is still set in your environment and will keep being used.',
   logoutSetupStill: (agents: string) =>
-    `${agents} still has the key in its own config. Run \`omgvibe reset\` to take it out.`,
+    `${agents} still has the key in its own config. Run \`${cmd('reset')}\` to take it out.`,
 
   // ---- endpoints ----
   endpointMeasuring: 'Measuring endpoints',
@@ -159,7 +161,7 @@ export const en = {
   setupNoneSelected: 'No agent selected.',
   setupNone: 'No supported agent to set up.',
   setupUnsupported: (agent: string) =>
-    `${agent} cannot be set up permanently. Start it with \`omgvibe ${agent.toLowerCase()}\` instead.`,
+    `${agent} cannot be set up permanently. Start it with \`${cmd(agent.toLowerCase())}\` instead.`,
   setupPlan: 'These files will change',
   setupPlanFile: (file: string, state: string) => `${file} (${state})`,
   setupFileNew: 'new file',
@@ -213,8 +215,8 @@ export const en = {
   doctorAllGood: 'Everything works.',
   doctorSomeFailed: (count: number) => `${count} ${count === 1 ? 'check' : 'checks'} failed.`,
   doctorHintTopUp: (url: string) => `Top up to start using models: ${url}`,
-  doctorHintKey: (url: string) => `Create a new key at ${url}, then run \`omgvibe login\`.`,
-  doctorHintNetwork: 'Check your network or proxy settings, or try another endpoint with `omgvibe endpoint`.',
+  doctorHintKey: (url: string) => `Create a new key at ${url}, then run \`${cmd('login')}\`.`,
+  doctorHintNetwork: `Check your network or proxy settings, or try another endpoint with \`${cmd('endpoint')}\`.`,
   doctorHttp: (status: number, message: string) => `HTTP ${status}: ${message}`,
 
   // ---- update ----
@@ -227,6 +229,35 @@ export const en = {
   updateDone: (version: string) => `Updated to omgvibe ${version}.`,
   updateFailed: (command: string) => `The update did not finish. Run \`${command}\` yourself.`,
   updateCheckFailed: 'Could not reach the npm registry.',
+
+  // ---- short command ----
+  shortcutWhy: (install: string, example: string) =>
+    `omgvibe can be installed, which is shorter to type and faster to start than npx: \`${example}\`. Installing runs \`${install}\`.`,
+  shortcutAsk: (short: string) => `Install the \`${short}\` command?`,
+  shortcutYes: 'Install',
+  shortcutNo: 'Not now',
+  shortcutInstalling: (command: string) => `Running ${command}`,
+  shortcutReady: (example: string) => `Installed. From now on: ${example}`,
+  shortcutInstalled: 'Installed.',
+  shortcutShadowed: (short: string, path: string, long: string) =>
+    `\`${short}\` is another program on this computer (${path}). Use \`${long}\` instead: it is the same command.`,
+  shortcutNotOnPath: (short: string) =>
+    `\`${short}\` is not on your PATH yet. Open a new terminal. If it is still missing, add npm's global bin directory to PATH (\`npm prefix -g\` shows where it is).`,
+  shortcutFailed: (command: string) => `\`${command}\` did not finish.`,
+  shortcutFailedExists: (short: string) =>
+    `Another program named \`${short}\` is already in npm's bin directory, and npm does not replace files it did not create. Nothing was installed or changed.`,
+  shortcutFailedPermission:
+    'npm is not allowed to write to its global directory. A Node.js version manager (nvm, fnm, Volta) installs into your home directory and avoids this.',
+  shortcutTip: (install: string, example: string) => `Tip: \`${install}\` gives you a shorter command: ${example}`,
+  helpShort: (short: string, long: string) => `\`${short}\` and \`${long}\` are the same command.`,
+  helpShortInstall: (install: string, example: string) =>
+    `For a shorter command, install it: \`${install}\`, then \`${example}\`.`,
+  hubShortcut: (short: string) => `Install the \`${short}\` command`,
+  hubShortcutHint: 'shorter to type, faster to start',
+  statusShortcut: 'Short command',
+  statusShortcutMissing: (install: string) => `not installed; \`${install}\` adds it`,
+  statusShortcutTaken: (path: string) => `another program has this name: ${path}`,
+  statusShortcutUseLong: (long: string) => `Use \`${long}\` instead.`,
 
   // ---- hub ----
   hubWhat: 'What do you want to do?',

@@ -1,8 +1,7 @@
-import { realpathSync } from 'node:fs';
-
 import spawn from 'cross-spawn';
 
 import { httpRequest, parseJson } from '../core/http';
+import { INVOCATION } from '../core/invocation';
 import { loadConfig, updateConfig } from '../core/store';
 import { CliError, note } from '../core/ui';
 import { PACKAGE_NAME, VERSION } from '../core/version';
@@ -31,16 +30,7 @@ async function fetchLatest(env: NodeJS.ProcessEnv, timeoutMs: number): Promise<s
   }
 }
 
-/** True when this process was started by `npx` (its cache lives under `_npx`). */
-function runningFromNpx(): boolean {
-  try {
-    return realpathSync(process.argv[1] ?? '').split(/[\\/]/).includes('_npx');
-  } catch {
-    return false;
-  }
-}
-
-const updateCommandLine = (): string => (runningFromNpx() ? `npx ${PACKAGE_NAME}@latest` : `npm install -g ${PACKAGE_NAME}@latest`);
+const updateCommandLine = (): string => (INVOCATION.npx ? `npx ${PACKAGE_NAME}@latest` : `npm install -g ${PACKAGE_NAME}@latest`);
 
 /**
  * Looks for a newer release at most once a day, in the background, and never
@@ -87,7 +77,7 @@ export async function updateCommand(env: NodeJS.ProcessEnv = process.env): Promi
     return;
   }
   process.stdout.write(`${t().updateAvailable(latest, VERSION)}\n`);
-  if (runningFromNpx()) {
+  if (INVOCATION.npx) {
     process.stdout.write(`${t().updateNpx}\n`);
     return;
   }

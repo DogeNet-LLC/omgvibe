@@ -1,3 +1,4 @@
+import { cmd } from '../core/invocation';
 import type { Messages } from './en';
 
 export const zh: Messages = {
@@ -26,7 +27,7 @@ export const zh: Messages = {
   helpCmdDoctor: '端到端检查连接，不产生费用',
   helpCmdEndpoint: '测速并选择节点',
   helpCmdUpdate: '更新 omgvibe',
-  helpOptModel: '要用的模型，取 `omgvibe models` 里的任意 ID',
+  helpOptModel: `要用的模型，取 \`${cmd('models')}\` 里的任意 ID`,
   helpOptPick: '从可搜索的列表里选模型',
   helpOptEndpoint: '本次使用的节点（地区名或 Base URL）',
   helpOptKey: '本次使用的 API Key（默认取已保存的 Key 或 $OHMYGPT_API_KEY）',
@@ -42,14 +43,14 @@ export const zh: Messages = {
 
   // ---- errors ----
   errUnknownCommand: (name) => `没有这个命令或 Agent：${name}`,
-  errUnknownCommandHint: '运行 `omgvibe --help` 查看全部命令和 Agent。',
+  errUnknownCommandHint: `运行 \`${cmd('--help')}\` 查看全部命令和 Agent。`,
   errDidYouMean: (name) => `是不是想输入 \`${name}\`？`,
   errOptionNeedsValue: (option) => `${option} 后面要跟一个值。`,
   errUnknownOption: (option) => `没有这个选项：${option}`,
   errBadLang: (value) => `不支持的语言：${value}。可选 en、zh、ja。`,
   errBadEndpoint: (value) => `无法识别的节点：${value}。请填地区名（cloudflare、us、asia、cn2、sg、eu）或 Base URL。`,
   errNotSignedIn: '还没有 API Key。',
-  errNotSignedInHint: '运行 `omgvibe login`，或设置环境变量 OHMYGPT_API_KEY。',
+  errNotSignedInHint: `运行 \`${cmd('login')}\`，或设置环境变量 OHMYGPT_API_KEY。`,
   errNeedsTerminal: (command) => `\`${command}\` 需要在交互式终端里运行。`,
   errConfig: (detail) => `读取 omgvibe 的设置失败：${detail}`,
 
@@ -76,7 +77,7 @@ export const zh: Messages = {
   logoutDone: '已删除保存的 Key。',
   logoutNothing: '没有保存过 Key。',
   logoutEnvStill: '环境变量 OHMYGPT_API_KEY 仍然存在，omgvibe 会继续用它。',
-  logoutSetupStill: (agents) => `${agents} 自己的配置里还留着这个 Key，运行 \`omgvibe reset\` 可以清掉。`,
+  logoutSetupStill: (agents) => `${agents} 自己的配置里还留着这个 Key，运行 \`${cmd('reset')}\` 可以清掉。`,
 
   // ---- endpoints ----
   endpointMeasuring: '正在测速',
@@ -151,7 +152,7 @@ export const zh: Messages = {
   setupWhich: '哪些 Agent 默认使用 OhMyGPT？',
   setupNoneSelected: '没有选择任何 Agent。',
   setupNone: '没有可以配置的 Agent。',
-  setupUnsupported: (agent) => `${agent} 不支持写入配置，请用 \`omgvibe ${agent.toLowerCase()}\` 启动。`,
+  setupUnsupported: (agent) => `${agent} 不支持写入配置，请用 \`${cmd(agent.toLowerCase())}\` 启动。`,
   setupPlan: '将要修改这些文件',
   setupPlanFile: (file, state) => `${file}（${state}）`,
   setupFileNew: '新建',
@@ -205,8 +206,8 @@ export const zh: Messages = {
   doctorAllGood: '一切正常。',
   doctorSomeFailed: (count) => `有 ${count} 项检查没有通过。`,
   doctorHintTopUp: (url) => `充值后即可使用模型：${url}`,
-  doctorHintKey: (url) => `到 ${url} 新建一个 Key，然后运行 \`omgvibe login\`。`,
-  doctorHintNetwork: '请检查网络或代理设置，或者用 `omgvibe endpoint` 换一个节点。',
+  doctorHintKey: (url) => `到 ${url} 新建一个 Key，然后运行 \`${cmd('login')}\`。`,
+  doctorHintNetwork: `请检查网络或代理设置，或者用 \`${cmd('endpoint')}\` 换一个节点。`,
   doctorHttp: (status, message) => `HTTP ${status}：${message}`,
 
   // ---- update ----
@@ -219,6 +220,34 @@ export const zh: Messages = {
   updateDone: (version) => `已更新到 omgvibe ${version}。`,
   updateFailed: (command) => `更新没有完成，请手动运行 \`${command}\`。`,
   updateCheckFailed: '连不上 npm registry。',
+
+  // ---- short command ----
+  shortcutWhy: (install, example) =>
+    `omgvibe 可以安装到本机，之后输入更短，启动也比 npx 快：\`${example}\`。安装会运行 \`${install}\`。`,
+  shortcutAsk: (short) => `安装 \`${short}\` 命令吗？`,
+  shortcutYes: '安装',
+  shortcutNo: '暂不安装',
+  shortcutInstalling: (command) => `正在运行 ${command}`,
+  shortcutReady: (example) => `已安装。以后直接运行：${example}`,
+  shortcutInstalled: '已安装。',
+  shortcutShadowed: (short, path, long) =>
+    `这台电脑上的 \`${short}\` 是另一个程序（${path}）。请改用 \`${long}\`，两者是同一个命令。`,
+  shortcutNotOnPath: (short) =>
+    `\`${short}\` 还不在 PATH 里。请新开一个终端；如果仍然找不到，把 npm 的全局 bin 目录加入 PATH（\`npm prefix -g\` 可以查看它的位置）。`,
+  shortcutFailed: (command) => `\`${command}\` 没有完成。`,
+  shortcutFailedExists: (short) =>
+    `npm 的 bin 目录里已经有另一个名为 \`${short}\` 的程序，npm 不会替换不是它创建的文件。没有安装或改动任何东西。`,
+  shortcutFailedPermission:
+    'npm 没有权限写入它的全局目录。Node.js 版本管理器（nvm、fnm、Volta）会安装到你的主目录，可以避开这个问题。',
+  shortcutTip: (install, example) => `提示：运行 \`${install}\` 后可以用更短的命令：${example}`,
+  helpShort: (short, long) => `\`${short}\` 和 \`${long}\` 是同一个命令。`,
+  helpShortInstall: (install, example) => `想用更短的命令，先安装：\`${install}\`，之后运行 \`${example}\`。`,
+  hubShortcut: (short) => `安装 \`${short}\` 命令`,
+  hubShortcutHint: '输入更短，启动更快',
+  statusShortcut: '短命令',
+  statusShortcutMissing: (install) => `未安装，运行 \`${install}\` 即可`,
+  statusShortcutTaken: (path) => `这个名字被另一个程序占用：${path}`,
+  statusShortcutUseLong: (long) => `请改用 \`${long}\`。`,
 
   // ---- hub ----
   hubWhat: '要做什么？',

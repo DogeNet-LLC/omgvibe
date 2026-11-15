@@ -28,4 +28,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20.12'
-      - run: node bin/omgvibe.mjs --version
+      - run: node bin/omgvibe.mjs --version && node bin/ov.mjs --help

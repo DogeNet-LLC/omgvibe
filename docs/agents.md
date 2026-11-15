@@ -1,10 +1,10 @@
 # What each agent receives
 
-`omgvibe <agent>` builds a launch from flags and environment variables, and `omgvibe setup <agent>` writes the same connection into the agent's config. This page lists both for every agent. `<endpoint>` is the chosen base URL (for example `https://api.ohmygpt.com`), `<key>` your API key and `<model>` the chosen model ID.
+`ov <agent>` builds a launch from flags and environment variables, and `ov setup <agent>` writes the same connection into the agent's config. This page lists both for every agent. `<endpoint>` is the chosen base URL (for example `https://api.ohmygpt.com`), `<key>` your API key and `<model>` the chosen model ID.
 
 The source of truth is [`src/agents/`](../src/agents); each adapter links to the documentation it follows.
 
-## Claude Code — `omgvibe claude`
+## Claude Code — `ov claude`
 
 Session: a settings file is written to `~/.omgvibe/run/`, passed with `--settings`, and removed when Claude Code exits. A file is used because a `env` block in `~/.claude/settings.json` overrides plain environment variables, while `--settings` ranks above it.
 
@@ -22,7 +22,7 @@ Session: a settings file is written to `~/.omgvibe/run/`, passed with `--setting
 
 Setup: the same variables under `env` in `~/.claude/settings.json`.
 
-## Codex — `omgvibe codex`
+## Codex — `ov codex`
 
 Session: `-c key=value` overrides placed before your arguments, where Codex applies them to every subcommand. The key travels in `OHMYGPT_API_KEY`.
 
@@ -43,7 +43,7 @@ Two more overrides depend on the model:
 
 Setup, in `~/.codex/config.toml`: `model`, `model_provider = "ohmygpt"`, `web_search = "disabled"` where it applies, and a `[model_providers.ohmygpt]` table that carries the key as `experimental_bearer_token`, so Codex needs no exported variable in the IDE extension or the desktop app.
 
-## opencode — `omgvibe opencode`, Kilo Code — `omgvibe kilo`
+## opencode — `ov opencode`, Kilo Code — `ov kilo`
 
 Session: inline config in `OPENCODE_CONFIG_CONTENT` (`KILO_CONFIG_CONTENT` for Kilo Code), merged over your own config files. It defines a provider `ohmygpt` on `@ai-sdk/openai-compatible` with `baseURL` `<endpoint>/v1`, `apiKey` `{env:OHMYGPT_API_KEY}`, the attribution headers and the catalog's models with their context and output limits, and sets `model` and `small_model` to `ohmygpt/<model>`.
 
@@ -51,19 +51,19 @@ opencode 2 runs a shared background server that reads config from its own enviro
 
 Setup: the same provider, with the key written in, in `~/.config/opencode/opencode.json` or `.jsonc` (`~/.config/kilo/kilo.jsonc` for Kilo Code), plus `model` and `small_model`.
 
-## Qwen Code — `omgvibe qwen`
+## Qwen Code — `ov qwen`
 
 Session: `--auth-type openai --openai-base-url <endpoint>/v1 --model <model>`, with the key in `OPENAI_API_KEY`. `OPENAI_BASE_URL` and `OPENAI_MODEL` are removed from the session's environment so they cannot compete with the flags.
 
 No setup: Qwen Code's provider settings are not stable enough to edit safely.
 
-## Pi — `omgvibe pi`
+## Pi — `ov pi`
 
 Session: Pi has no base URL flag, so a small extension file is written to `~/.omgvibe/run/` and passed with `-e`. It registers a provider `ohmygpt` (`api: "openai-completions"`, `apiKey: "$OHMYGPT_API_KEY"`) with the catalog's models, context windows and prices. `--provider ohmygpt --model <model>` selects the model.
 
 Setup: the provider in `~/.pi/agent/models.json`, and `defaultProvider` and `defaultModel` in `~/.pi/agent/settings.json`.
 
-## CodeWhale — `omgvibe codewhale`
+## CodeWhale — `ov codewhale`
 
 Session: CodeWhale does not send a key from the environment to a custom host, so the session gets a copy of your `~/.codewhale/config.toml` with these settings applied, passed with `--config`:
 

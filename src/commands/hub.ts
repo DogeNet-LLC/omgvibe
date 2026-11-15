@@ -3,6 +3,7 @@ import * as clack from '@clack/prompts';
 import { AGENTS, detectAll } from '../agents';
 import type { AgentDefinition } from '../agents/types';
 import { maskKey } from '../core/account';
+import { cmd, SHORT_COMMAND } from '../core/invocation';
 import { type Options, resolveEndpointFor, resolveKey, tryLoadCatalog } from '../core/session';
 import { type Lang, loadConfig, rememberModel, updateConfig } from '../core/store';
 import { ask, bold, Cancelled, dim } from '../core/ui';
@@ -15,9 +16,10 @@ import { launch } from './launch';
 import { login, logout } from './login';
 import { modelsCommand } from './models';
 import { resetCommand, setupCommand } from './setup';
+import { installShortcut, offerShortcut, shortcutAvailable } from './shortcut';
 import { statusCommand } from './status';
 
-type Action = 'launch' | 'setup' | 'reset' | 'models' | 'status' | 'settings' | 'exit';
+type Action = 'launch' | 'setup' | 'reset' | 'models' | 'status' | 'settings' | 'shortcut' | 'exit';
 type Setting = 'endpoint' | 'language' | 'key' | 'logout' | 'back';
 
 /** Runs a step of the menu; backing out of it returns to the menu instead of quitting. */
@@ -91,7 +93,11 @@ export async function hub(options: Options, env: NodeJS.ProcessEnv = process.env
   if (!key) key = await login(options, env, true);
   else clack.log.info(dim(t().hubSignedInAs(maskKey(key.key))));
 
+  // The command to suggest for next time: the short one as soon as it exists.
+  let program = (await offerShortcut(env)) ?? undefined;
+
   for (;;) {
+    const canInstall = program === undefined && (await shortcutAvailable(env));
     let action: Action;
     try {
       action = await ask(
@@ -104,6 +110,9 @@ export async function hub(options: Options, env: NodeJS.ProcessEnv = process.env
             { value: 'models', label: t().hubModels },
             { value: 'status', label: t().hubStatus },
             { value: 'settings', label: t().hubSettings, hint: t().hubSettingsHint },
+            ...(canInstall
+              ? [{ value: 'shortcut' as const, label: t().hubShortcut(SHORT_COMMAND), hint: t().hubShortcutHint }]
+              : []),
             { value: 'exit', label: t().hubExit },
           ],
         }),
@@ -131,7 +140,7 @@ export async function hub(options: Options, env: NodeJS.ProcessEnv = process.env
             else if (latest.models) delete latest.models[agent.id];
           }, env);
         }
-        clack.outro(dim(t().hubTip(`omgvibe ${agent.id}`)));
+        clack.outro(dim(t().hubTip(cmd(agent.id, program))));
         started = await launch(agent, [], { ...options, model, pick: false }, env);
       });
       if (started !== undefined) return started;
@@ -143,6 +152,7 @@ export async function hub(options: Options, env: NodeJS.ProcessEnv = process.env
       else if (action === 'reset') await resetCommand([], options, env);
       else if (action === 'models') await modelsCommand([], options, env);
       else if (action === 'settings') await settings(options, env);
+      else if (action === 'shortcut') program = (await installShortcut(env)) ?? undefined;
       else if (action === 'status') {
         await statusCommand(options, env);
         process.stdout.write('\n');

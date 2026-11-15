@@ -42,7 +42,7 @@ export interface LaunchInput {
   /** The environment omgvibe itself was started with. */
   env: NodeJS.ProcessEnv;
   scratch: Scratch;
-  /** Headers that name the agent on each request, so usage can be told apart per agent. */
+  /** Headers that name the agent on each request. */
   attribution: Record<string, string>;
 }
 

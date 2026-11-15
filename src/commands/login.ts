@@ -3,6 +3,7 @@ import * as clack from '@clack/prompts';
 import { loadSetupState } from '../core/setup-state';
 import { BILLING_URL, checkKey, cleanKey, KEY_ENV, KEYS_URL, keyProblem, maskKey } from '../core/account';
 import { DEFAULT_ENDPOINT, ENDPOINTS, fastest, probeAll, type ProbeResult, resolveEndpoint } from '../core/endpoints';
+import { cmd } from '../core/invocation';
 import { paths, tildify } from '../core/paths';
 import { BASE_URL_ENV, type Options, type ResolvedKey, resolveKey } from '../core/session';
 import { loadConfig, updateConfig } from '../core/store';
@@ -10,6 +11,7 @@ import { ask, CliError, confirm, formatInt, isInteractive, note } from '../core/
 import { t } from '../i18n';
 import { AGENTS } from '../agents';
 import { endpointLines, openUrl } from './common';
+import { offerShortcut } from './shortcut';
 
 interface LoginResult extends ResolvedKey {
   endpoint: string;
@@ -70,7 +72,7 @@ export async function login(
   const interactive = isInteractive() && !options.yes;
   const given = options.key ? cleanKey(options.key) : !interactive && env[KEY_ENV] ? cleanKey(env[KEY_ENV]!) : '';
   if (!given && !interactive) {
-    throw new CliError(t().errNeedsTerminal('omgvibe login'), [t().errNotSignedInHint]);
+    throw new CliError(t().errNeedsTerminal(cmd('login')), [t().errNotSignedInHint]);
   }
   if (interactive) {
     if (embedded) clack.log.step(t().loginIntro);
@@ -99,7 +101,11 @@ export async function login(
       if (interactive) {
         clack.log.success(saved);
         if (!check.account.toppedUp) clack.log.warn(t().loginNotToppedUp(BILLING_URL));
-        if (!embedded) clack.outro(`${t().loginDone} ${t().loginNext('omgvibe claude')}`);
+        if (!embedded) {
+          // A first sign-in through npx is the moment to offer the installed, shorter command.
+          const program = (await offerShortcut(env)) ?? undefined;
+          clack.outro(`${t().loginDone} ${t().loginNext(cmd('claude', program))}`);
+        }
       } else {
         process.stdout.write(`${t().loginAccepted(check.account.userId, formatInt(check.account.rpm))}\n${saved}\n`);
         if (!check.account.toppedUp) note.warn(t().loginNotToppedUp(BILLING_URL));

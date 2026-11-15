@@ -1,11 +1,13 @@
 import { AGENTS, detectAll } from '../agents';
 import { checkKey, type KeyCheck, maskKey } from '../core/account';
+import { cmd, INVOCATION, SHORT_COMMAND } from '../core/invocation';
 import { tildify } from '../core/paths';
 import { type EndpointSource, endpointLabel, type KeySource, type Options, resolveEndpointFor, resolveKey } from '../core/session';
 import { loadSetupState } from '../core/setup-state';
+import { type ShortcutState, shortcutState } from '../core/shortcut';
 import { loadConfig } from '../core/store';
 import { bold, dim, formatInt, green, padEnd, red, yellow } from '../core/ui';
-import { VERSION } from '../core/version';
+import { PACKAGE_NAME, VERSION } from '../core/version';
 import { t } from '../i18n';
 
 const keySourceLabel = (source: KeySource): string =>
@@ -26,14 +28,25 @@ function accountLine(masked: string, source: KeySource, check: KeyCheck): string
   return `${yellow('!')} ${who}  ${t().loginUnverified(check.message)}`;
 }
 
+function shortcutLine(shortcut: ShortcutState, env: NodeJS.ProcessEnv): string {
+  if (shortcut.state === 'ready') return `${green('✓')} ${SHORT_COMMAND}  ${dim(tildify(shortcut.path, env))}`;
+  if (shortcut.state === 'missing') {
+    return `${dim('–')} ${SHORT_COMMAND}  ${dim(t().statusShortcutMissing(`npm install -g ${PACKAGE_NAME}`))}`;
+  }
+  // The full name is only a way out for someone who has omgvibe installed.
+  const useLong = INVOCATION.npx ? '' : `  ${t().statusShortcutUseLong(PACKAGE_NAME)}`;
+  return `${yellow('!')} ${SHORT_COMMAND}  ${t().statusShortcutTaken(tildify(shortcut.path, env))}${useLong}`;
+}
+
 /** `omgvibe status`: who is signed in, which endpoint is in use, and which agents are installed and set up. */
 export async function statusCommand(options: Options, env: NodeJS.ProcessEnv = process.env): Promise<void> {
   const config = await loadConfig(env);
   const key = resolveKey(options, config, env);
-  const [{ endpoint, source }, agents, state] = await Promise.all([
+  const [{ endpoint, source }, agents, state, shortcut] = await Promise.all([
     resolveEndpointFor(options, config, env),
     detectAll(env),
     loadSetupState(env),
+    shortcutState(env),
   ]);
   const check = key ? await checkKey(endpoint.url, key.key, env) : null;
 
@@ -51,6 +64,7 @@ export async function statusCommand(options: Options, env: NodeJS.ProcessEnv = p
               }
             : null,
           endpoint: { id: endpoint.id, url: endpoint.url, source },
+          short_command: { name: SHORT_COMMAND, state: shortcut.state, path: shortcut.state === 'missing' ? null : shortcut.path },
           agents: agents.map(({ agent, path, version }) => ({
             id: agent.id,
             name: agent.name,
@@ -78,7 +92,7 @@ export async function statusCommand(options: Options, env: NodeJS.ProcessEnv = p
   lines.push('', bold(t().statusAgents));
 
   const nameWidth = Math.max(...AGENTS.map((agent) => agent.name.length));
-  const commandWidth = Math.max(...AGENTS.map((agent) => `omgvibe ${agent.id}`.length));
+  const commandWidth = Math.max(...AGENTS.map((agent) => cmd(agent.id).length));
   const versionWidth = Math.max(...agents.map(({ path, version }) => (path ? (version ?? '').length : t().notInstalled.length)));
   for (const { agent, path, version } of agents) {
     const setup = state.agents[agent.id];
@@ -92,8 +106,9 @@ export async function statusCommand(options: Options, env: NodeJS.ProcessEnv = p
       config.models?.[agent.id] ? dim(t().statusDefaultModel(config.models[agent.id]!)) : '',
     ].filter(Boolean);
     lines.push(
-      `  ${path ? green('✓') : dim('–')} ${padEnd(agent.name, nameWidth)}  ${dim(padEnd(`omgvibe ${agent.id}`, commandWidth))}  ${installed}  ${details.join('  ')}`.trimEnd(),
+      `  ${path ? green('✓') : dim('–')} ${padEnd(agent.name, nameWidth)}  ${dim(padEnd(cmd(agent.id), commandWidth))}  ${installed}  ${details.join('  ')}`.trimEnd(),
     );
   }
+  lines.push('', bold(t().statusShortcut), `  ${shortcutLine(shortcut, env)}`);
   process.stdout.write(`${lines.join('\n')}\n`);
 }

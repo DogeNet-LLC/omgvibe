@@ -1,3 +1,4 @@
+import { cmd } from '../core/invocation';
 import type { Messages } from './en';
 
 export const ja: Messages = {
@@ -26,7 +27,7 @@ export const ja: Messages = {
   helpCmdDoctor: '接続を端から端まで確認する（無料）',
   helpCmdEndpoint: 'エンドポイントを計測して選ぶ',
   helpCmdUpdate: 'omgvibe を更新する',
-  helpOptModel: '使うモデル。`omgvibe models` に出る ID を指定',
+  helpOptModel: `使うモデル。\`${cmd('models')}\` に出る ID を指定`,
   helpOptPick: '検索できる一覧からモデルを選ぶ',
   helpOptEndpoint: '今回使うエンドポイント（リージョン名またはベース URL）',
   helpOptKey: '今回使う API キー（既定は保存済みキーまたは $OHMYGPT_API_KEY）',
@@ -42,7 +43,7 @@ export const ja: Messages = {
 
   // ---- errors ----
   errUnknownCommand: (name) => `コマンドまたはエージェントが見つかりません：${name}`,
-  errUnknownCommandHint: '`omgvibe --help` でコマンドとエージェントの一覧を確認できます。',
+  errUnknownCommandHint: `\`${cmd('--help')}\` でコマンドとエージェントの一覧を確認できます。`,
   errDidYouMean: (name) => `\`${name}\` のことですか？`,
   errOptionNeedsValue: (option) => `${option} には値が必要です。`,
   errUnknownOption: (option) => `不明なオプション：${option}`,
@@ -50,7 +51,7 @@ export const ja: Messages = {
   errBadEndpoint: (value) =>
     `エンドポイントとして認識できません：${value}。リージョン名（cloudflare、us、asia、cn2、sg、eu）またはベース URL を指定してください。`,
   errNotSignedIn: 'API キーがまだありません。',
-  errNotSignedInHint: '`omgvibe login` を実行するか、環境変数 OHMYGPT_API_KEY を設定してください。',
+  errNotSignedInHint: `\`${cmd('login')}\` を実行するか、環境変数 OHMYGPT_API_KEY を設定してください。`,
   errNeedsTerminal: (command) => `\`${command}\` は対話可能なターミナルで実行してください。`,
   errConfig: (detail) => `omgvibe の設定を読み込めませんでした：${detail}`,
 
@@ -77,7 +78,7 @@ export const ja: Messages = {
   logoutDone: '保存したキーを削除しました。',
   logoutNothing: '保存されたキーはありません。',
   logoutEnvStill: '環境変数 OHMYGPT_API_KEY が残っているため、引き続きそのキーが使われます。',
-  logoutSetupStill: (agents) => `${agents} の設定にはキーが残っています。\`omgvibe reset\` で取り除けます。`,
+  logoutSetupStill: (agents) => `${agents} の設定にはキーが残っています。\`${cmd('reset')}\` で取り除けます。`,
 
   // ---- endpoints ----
   endpointMeasuring: 'エンドポイントを計測しています',
@@ -152,7 +153,7 @@ export const ja: Messages = {
   setupWhich: 'どのエージェントで OhMyGPT を既定にしますか？',
   setupNoneSelected: 'エージェントが選択されていません。',
   setupNone: '設定できるエージェントがありません。',
-  setupUnsupported: (agent) => `${agent} は設定への書き込みに対応していません。\`omgvibe ${agent.toLowerCase()}\` で起動してください。`,
+  setupUnsupported: (agent) => `${agent} は設定への書き込みに対応していません。\`${cmd(agent.toLowerCase())}\` で起動してください。`,
   setupPlan: '次のファイルを変更します',
   setupPlanFile: (file, state) => `${file}（${state}）`,
   setupFileNew: '新規作成',
@@ -206,8 +207,8 @@ export const ja: Messages = {
   doctorAllGood: 'すべて正常です。',
   doctorSomeFailed: (count) => `${count} 件の確認に失敗しました。`,
   doctorHintTopUp: (url) => `チャージするとモデルを使えるようになります：${url}`,
-  doctorHintKey: (url) => `${url} で新しいキーを作成し、\`omgvibe login\` を実行してください。`,
-  doctorHintNetwork: 'ネットワークまたはプロキシの設定を確認するか、`omgvibe endpoint` で別のエンドポイントをお試しください。',
+  doctorHintKey: (url) => `${url} で新しいキーを作成し、\`${cmd('login')}\` を実行してください。`,
+  doctorHintNetwork: `ネットワークまたはプロキシの設定を確認するか、\`${cmd('endpoint')}\` で別のエンドポイントをお試しください。`,
   doctorHttp: (status, message) => `HTTP ${status}：${message}`,
 
   // ---- update ----
@@ -220,6 +221,34 @@ export const ja: Messages = {
   updateDone: (version) => `omgvibe ${version} に更新しました。`,
   updateFailed: (command) => `更新が完了しませんでした。\`${command}\` を手動で実行してください。`,
   updateCheckFailed: 'npm レジストリに接続できませんでした。',
+
+  // ---- short command ----
+  shortcutWhy: (install, example) =>
+    `omgvibe はインストールして使えます。npx より入力が短く、起動も速くなります：\`${example}\`。インストールでは \`${install}\` を実行します。`,
+  shortcutAsk: (short) => `\`${short}\` コマンドをインストールしますか？`,
+  shortcutYes: 'インストール',
+  shortcutNo: '今はしない',
+  shortcutInstalling: (command) => `${command} を実行中`,
+  shortcutReady: (example) => `インストールしました。次からは：${example}`,
+  shortcutInstalled: 'インストールしました。',
+  shortcutShadowed: (short, path, long) =>
+    `このコンピューターの \`${short}\` は別のプログラムです（${path}）。同じコマンドである \`${long}\` をお使いください。`,
+  shortcutNotOnPath: (short) =>
+    `\`${short}\` はまだ PATH にありません。新しいターミナルを開いてください。それでも見つからない場合は、npm のグローバル bin ディレクトリを PATH に追加してください（場所は \`npm prefix -g\` で確認できます）。`,
+  shortcutFailed: (command) => `\`${command}\` が完了しませんでした。`,
+  shortcutFailedExists: (short) =>
+    `npm の bin ディレクトリに \`${short}\` という別のプログラムがすでにあり、npm は自分が作成していないファイルを置き換えません。何もインストール・変更されていません。`,
+  shortcutFailedPermission:
+    'npm にグローバルディレクトリへの書き込み権限がありません。Node.js のバージョン管理ツール（nvm、fnm、Volta）はホームディレクトリにインストールするため、この問題を避けられます。',
+  shortcutTip: (install, example) => `ヒント：\`${install}\` を実行すると、短いコマンドが使えます：${example}`,
+  helpShort: (short, long) => `\`${short}\` と \`${long}\` は同じコマンドです。`,
+  helpShortInstall: (install, example) => `短いコマンドを使うには、まずインストールします：\`${install}\`。その後は \`${example}\`。`,
+  hubShortcut: (short) => `\`${short}\` コマンドをインストール`,
+  hubShortcutHint: '入力が短く、起動が速い',
+  statusShortcut: '短縮コマンド',
+  statusShortcutMissing: (install) => `未インストール。\`${install}\` で追加できます`,
+  statusShortcutTaken: (path) => `この名前は別のプログラムが使っています：${path}`,
+  statusShortcutUseLong: (long) => `代わりに \`${long}\` をお使いください。`,
 
   // ---- hub ----
   hubWhat: '何をしますか？',

@@ -22,6 +22,8 @@ export interface Config {
   /** Update check bookkeeping. */
   updateCheckedAt?: number;
   latestVersion?: string;
+  /** When installing the short command was last suggested to someone running through npx (epoch ms). */
+  shortcutMentionedAt?: number;
 }
 
 const RECENT_MODELS = 8;

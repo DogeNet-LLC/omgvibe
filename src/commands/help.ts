@@ -1,7 +1,8 @@
 import { AGENTS } from '../agents';
 import { DOCS_URL } from '../core/account';
+import { cmd, INVOCATION, SHORT_COMMAND } from '../core/invocation';
 import { bold, dim, padEnd } from '../core/ui';
-import { VERSION } from '../core/version';
+import { PACKAGE_NAME, VERSION } from '../core/version';
 import { t } from '../i18n';
 
 const rows = (entries: Array<[string, string]>): string[] => {
@@ -16,17 +17,17 @@ export function helpText(): string {
     '',
     bold(m.helpUsage),
     ...rows([
-      ['omgvibe', m.helpCmdHub],
-      ['omgvibe <agent> [args…]', m.helpCmdLaunch],
-      ['omgvibe setup [agent…]', m.helpCmdSetup],
-      ['omgvibe reset [agent…]', m.helpCmdReset],
-      ['omgvibe login', m.helpCmdLogin],
-      ['omgvibe logout', m.helpCmdLogout],
-      ['omgvibe models [search…]', m.helpCmdModels],
-      ['omgvibe status', m.helpCmdStatus],
-      ['omgvibe doctor', m.helpCmdDoctor],
-      ['omgvibe endpoint [region|url|auto]', m.helpCmdEndpoint],
-      ['omgvibe update', m.helpCmdUpdate],
+      [cmd(), m.helpCmdHub],
+      [cmd('<agent> [args…]'), m.helpCmdLaunch],
+      [cmd('setup [agent…]'), m.helpCmdSetup],
+      [cmd('reset [agent…]'), m.helpCmdReset],
+      [cmd('login'), m.helpCmdLogin],
+      [cmd('logout'), m.helpCmdLogout],
+      [cmd('models [search…]'), m.helpCmdModels],
+      [cmd('status'), m.helpCmdStatus],
+      [cmd('doctor'), m.helpCmdDoctor],
+      [cmd('endpoint [region|url|auto]'), m.helpCmdEndpoint],
+      [cmd('update'), m.helpCmdUpdate],
     ]),
     '',
     bold(m.helpAgents),
@@ -47,14 +48,19 @@ export function helpText(): string {
     ]),
     '',
     bold(m.helpExamples),
-    '  omgvibe claude',
-    '  omgvibe codex --model openai/gpt-5.5',
-    '  omgvibe claude --model zhipu/glm-5.3 -p "review this diff"',
-    '  omgvibe opencode --pick',
-    '  omgvibe setup claude codex',
+    `  ${cmd('claude')}`,
+    `  ${cmd('codex --model openai/gpt-5.5')}`,
+    `  ${cmd('claude --model zhipu/glm-5.3 -p "review this diff"')}`,
+    `  ${cmd('opencode --pick')}`,
+    `  ${cmd('setup claude codex')}`,
     '',
     dim(m.helpPassThrough),
     dim(m.helpDoubleDash),
+    dim(
+      INVOCATION.npx
+        ? m.helpShortInstall(`npm install -g ${PACKAGE_NAME}`, cmd('claude', SHORT_COMMAND))
+        : m.helpShort(SHORT_COMMAND, PACKAGE_NAME),
+    ),
     '',
     `${m.helpDocs}: ${DOCS_URL}`,
   ].join('\n');

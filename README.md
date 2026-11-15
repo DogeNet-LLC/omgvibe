@@ -5,48 +5,55 @@
 Run Claude Code, Codex, opencode and other coding agents on [OhMyGPT](https://www.ohmygpt.com) with one command.
 
 ```bash
-npx omgvibe claude
+npm install -g omgvibe
+ov claude
 ```
 
 The first run asks for your OhMyGPT API key, measures the regional endpoints and keeps the fastest. After that the command starts the agent already connected: your key, the endpoint and the model arrive as flags and environment variables for that session, and the agent's own config files are not touched.
 
-Needs Node.js 20.12 or newer. To install it instead of using `npx`: `npm install -g omgvibe`.
+`ov` is the short name of `omgvibe`; both are installed and run the same program. To try it without installing anything:
+
+```bash
+npx omgvibe claude
+```
+
+Needs Node.js 20.12 or newer.
 
 ## Commands
 
 | Command | What it does |
 | --- | --- |
-| `omgvibe` | Opens a menu with everything below |
-| `omgvibe <agent> [args…]` | Starts an agent on OhMyGPT for this session |
-| `omgvibe setup [agent…]` | Writes OhMyGPT into an agent's own config, so it works without omgvibe |
-| `omgvibe reset [agent…]` | Undoes what `setup` changed |
-| `omgvibe login` / `logout` | Saves or removes your API key |
-| `omgvibe models [search…]` | Lists the models you can use, with context window and price |
-| `omgvibe status` | Shows sign-in, endpoint and installed agents |
-| `omgvibe doctor` | Checks the key, the endpoint and all three API protocols, free of charge |
-| `omgvibe endpoint [region\|url\|auto]` | Measures the endpoints and chooses one |
-| `omgvibe update` | Updates omgvibe |
+| `ov` | Opens a menu with everything below |
+| `ov <agent> [args…]` | Starts an agent on OhMyGPT for this session |
+| `ov setup [agent…]` | Writes OhMyGPT into an agent's own config, so it works without omgvibe |
+| `ov reset [agent…]` | Undoes what `setup` changed |
+| `ov login` / `logout` | Saves or removes your API key |
+| `ov models [search…]` | Lists the models you can use, with context window and price |
+| `ov status` | Shows sign-in, endpoint and installed agents |
+| `ov doctor` | Checks the key, the endpoint and all three API protocols, free of charge |
+| `ov endpoint [region\|url\|auto]` | Measures the endpoints and chooses one |
+| `ov update` | Updates omgvibe |
 
 ## Agents
 
 | Command | Agent | Protocol | `setup` |
 | --- | --- | --- | --- |
-| `omgvibe claude` | [Claude Code](https://code.claude.com/docs) | Anthropic Messages | yes |
-| `omgvibe codex` | [Codex](https://developers.openai.com/codex) | OpenAI Responses | yes |
-| `omgvibe opencode` | [opencode](https://opencode.ai) 1.x and 2.x | OpenAI Chat Completions | yes |
-| `omgvibe kilo` | [Kilo Code](https://kilo.ai) | OpenAI Chat Completions | yes |
-| `omgvibe qwen` | [Qwen Code](https://github.com/QwenLM/qwen-code) | OpenAI Chat Completions | session only |
-| `omgvibe pi` | [Pi](https://pi.dev) | OpenAI Chat Completions | yes |
-| `omgvibe codewhale` | [CodeWhale](https://github.com/codewhale-hq/CodeWhale) | OpenAI Chat Completions | yes |
+| `ov claude` | [Claude Code](https://code.claude.com/docs) | Anthropic Messages | yes |
+| `ov codex` | [Codex](https://developers.openai.com/codex) | OpenAI Responses | yes |
+| `ov opencode` | [opencode](https://opencode.ai) 1.x and 2.x | OpenAI Chat Completions | yes |
+| `ov kilo` | [Kilo Code](https://kilo.ai) | OpenAI Chat Completions | yes |
+| `ov qwen` | [Qwen Code](https://github.com/QwenLM/qwen-code) | OpenAI Chat Completions | session only |
+| `ov pi` | [Pi](https://pi.dev) | OpenAI Chat Completions | yes |
+| `ov codewhale` | [CodeWhale](https://github.com/codewhale-hq/CodeWhale) | OpenAI Chat Completions | yes |
 
 If the agent is not installed, omgvibe shows its install commands and, in a terminal, offers to run one.
 
 Arguments after the agent's name go to the agent unchanged, starting at the first one that is not an omgvibe option:
 
 ```bash
-omgvibe claude -p "review this diff"
-omgvibe codex --model openai/gpt-5.5 exec "fix the failing test"
-omgvibe claude -- --model opus        # after --, even --model goes to Claude Code
+ov claude -p "review this diff"
+ov codex --model openai/gpt-5.5 exec "fix the failing test"
+ov claude -- --model opus        # after --, even --model goes to Claude Code
 ```
 
 [docs/agents.md](docs/agents.md) lists exactly what each agent receives.
@@ -56,10 +63,10 @@ omgvibe claude -- --model opus        # after --, even --model goes to Claude Co
 Every chat model on OhMyGPT accepts all three protocols, so any of them works in any agent.
 
 ```bash
-omgvibe models                 # all chat models, strongest first
-omgvibe models claude sonnet   # search
-omgvibe codex --model zhipu/glm-5.3
-omgvibe opencode --pick        # choose from a searchable list; the choice is remembered
+ov models                 # all chat models, strongest first
+ov models claude sonnet   # search
+ov codex --model zhipu/glm-5.3
+ov opencode --pick        # choose from a searchable list; the choice is remembered
 ```
 
 Model IDs come from the live catalog (`GET /v1/models`), which changes every week, so omgvibe ships no model list. A mistyped name is corrected (`claude-sonet-5-5` → `anthropic/claude-sonnet-5-5`); a version that does not exist is never swapped for one that does.
@@ -72,20 +79,20 @@ With no `--model`:
 
 ## Session or setup
 
-`omgvibe <agent>` changes nothing on disk. It is the right choice when you also use the agent with another provider, or on a machine you do not want to reconfigure.
+`ov <agent>` changes nothing on disk. It is the right choice when you also use the agent with another provider, or on a machine you do not want to reconfigure.
 
-`omgvibe setup` is for an agent you want on OhMyGPT however it is started: a plain `claude`, the Codex desktop app, an IDE extension.
+`ov setup` is for an agent you want on OhMyGPT however it is started: a plain `claude`, the Codex desktop app, an IDE extension.
 
 ```bash
-omgvibe setup claude codex     # or just `omgvibe setup` to pick from a list
-omgvibe reset codex
+ov setup claude codex     # or just `ov setup` to pick from a list
+ov reset codex
 ```
 
 `setup` edits only the settings it needs and leaves the rest of the file, comments included, as you wrote it. It shows the changes before applying them, keeps a copy of each file under `~/.omgvibe/backups/`, and records what every setting was before. `reset` puts those values back. A setting you changed after `setup` is left alone and reported.
 
 ## Signing in
 
-`omgvibe login` opens the [API keys page](https://www.ohmygpt.com/keys), takes the key you paste and checks it with one request. The key is saved in `~/.omgvibe/config.json`, readable only by you.
+`ov login` opens the [API keys page](https://www.ohmygpt.com/keys), takes the key you paste and checks it with one request. The key is saved in `~/.omgvibe/config.json`, readable only by you.
 
 Without a saved key, omgvibe reads `OHMYGPT_API_KEY`. `--key` sets one for a single run. Order of precedence: `--key`, `OHMYGPT_API_KEY`, the saved key.
 
@@ -107,9 +114,9 @@ OhMyGPT serves the same API from several regions. omgvibe measures each one on a
 | `eu` Europe (Germany) | `https://api-ep-eu1.ohmygpt.com` |
 
 ```bash
-omgvibe endpoint          # measure and choose
-omgvibe endpoint cn2      # always use this one
-omgvibe endpoint auto     # back to the fastest
+ov endpoint          # measure and choose
+ov endpoint cn2      # always use this one
+ov endpoint auto     # back to the fastest
 ```
 
 `--endpoint <region|url>` or `OHMYGPT_BASE_URL` sets the endpoint for one run. omgvibe's own requests go through `HTTPS_PROXY` / `HTTP_PROXY` and respect `NO_PROXY`, the same as the agents it starts, so the endpoint is measured over the route the agent will use.
@@ -117,7 +124,7 @@ omgvibe endpoint auto     # back to the fastest
 ## Checking the connection
 
 ```text
-$ omgvibe doctor
+$ ov doctor
 Checking your connection to OhMyGPT  US direct  https://api.ohmygpt.com
   ✓ Endpoint                         reachable, 128 ms
   ✓ API key                          valid, account #1
@@ -144,17 +151,26 @@ The three requests go to `ohmygpt/mock`, the free test model. `status` and `doct
 | `-y`, `--yes` | Accept defaults and never prompt |
 | `--json` | Machine-readable output for `models`, `status`, `doctor`, `endpoint` |
 
-After an agent's name only `--model`/`-m`, `--pick`, `--endpoint`, `--key`, `--lang`, `--install` and `--yes` are omgvibe's, so `omgvibe claude --help` shows Claude Code's help.
+After an agent's name only `--model`/`-m`, `--pick`, `--endpoint`, `--key`, `--lang`, `--install` and `--yes` are omgvibe's, so `ov claude --help` shows Claude Code's help.
+
+## If `ov` is already taken
+
+`ov` is also the name of other programs, among them a terminal pager. If you have one of them:
+
+- **In the directory npm installs commands into** (for example Node.js and the other `ov` both come from Homebrew): `npm install -g omgvibe` stops with `EEXIST` and installs nothing, because npm does not replace files it did not create. Remove or rename the other `ov`, or keep using `npx omgvibe`.
+- **Somewhere else, earlier on `PATH`**: the install succeeds, and `ov` goes on running the other program. Use `omgvibe` instead, or move npm's bin directory (`npm prefix -g`) to the front of `PATH`.
+
+`omgvibe status` shows what `ov` runs on your computer.
 
 ## What omgvibe adds to requests
 
-Where the agent allows custom headers, omgvibe names it in `X-OhMyGPT-Title` (for example `Claude Code`), with `HTTP-Referer` and `X-OhMyGPT-Categories: cli-agent`. That is what lets [usage](https://www.ohmygpt.com/usage) be broken down per agent. Nothing else is added.
+Where the agent allows custom headers, omgvibe names it in `X-OhMyGPT-Title` (for example `Claude Code`), with `HTTP-Referer` and `X-OhMyGPT-Categories: cli-agent`. Nothing else is added.
 
-omgvibe sends no telemetry. At most once a day it asks the npm registry whether a newer version exists; `OMGVIBE_NO_UPDATE_CHECK=1` turns that off.
+ov sends no telemetry. At most once a day it asks the npm registry whether a newer version exists; `OMGVIBE_NO_UPDATE_CHECK=1` turns that off.
 
 ## Coming from 0.2
 
-1.0 replaces the wizard with commands. `npx omgvibe` still opens a guided menu.
+1.0 replaces the wizard with commands, and adds the short name `ov`. `ov` with no arguments still opens a guided menu.
 
 - The CodeX and Claude Code special-pricing channels have shut down and are gone.
 - 0.2 replaced whole config files. 1.0 edits single settings and can undo them.

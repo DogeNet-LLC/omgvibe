@@ -4,7 +4,8 @@
   "description": "Run Claude Code, Codex, opencode and other coding agents on OhMyGPT with one command.",
   "type": "module",
   "bin": {
-    "omgvibe": "bin/omgvibe.mjs"
+    "omgvibe": "bin/omgvibe.mjs",
+    "ov": "bin/ov.mjs"
   },
   "files": [
     "bin",

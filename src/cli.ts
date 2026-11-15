@@ -8,8 +8,10 @@ import { launch } from './commands/launch';
 import { login, logout } from './commands/login';
 import { modelsCommand } from './commands/models';
 import { resetCommand, setupCommand } from './commands/setup';
+import { tipShortcut } from './commands/shortcut';
 import { statusCommand } from './commands/status';
 import { announceUpdate, refreshUpdateInfo, updateCommand } from './commands/update';
+import { cmd } from './core/invocation';
 import { sweepStaleScratch } from './core/scratch';
 import { loadConfig } from './core/store';
 import { Cancelled, CliError, isInteractive, note } from './core/ui';
@@ -93,6 +95,7 @@ async function run(argv: readonly string[], env: NodeJS.ProcessEnv): Promise<num
     refreshUpdateInfo(env);
     const code = await launch(agent, rest, options, env);
     await announceUpdate(env);
+    await tipShortcut(env);
     return code;
   }
 
@@ -128,7 +131,7 @@ async function run(argv: readonly string[], env: NodeJS.ProcessEnv): Promise<num
       const suggestion = closestCommand(command);
       throw new CliError(
         t().errUnknownCommand(command),
-        [...(suggestion ? [t().errDidYouMean(`omgvibe ${suggestion}`)] : []), t().errUnknownCommandHint],
+        [...(suggestion ? [t().errDidYouMean(cmd(suggestion))] : []), t().errUnknownCommandHint],
         2,
       );
     }

@@ -44,9 +44,9 @@ interface Result {
   stderr: string;
 }
 
-function cli(args: string[], env: Record<string, string | undefined> = {}): Promise<Result> {
+function cli(args: string[], env: Record<string, string | undefined> = {}, entry = 'src/cli.ts'): Promise<Result> {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, ['--import', 'tsx', path.join(ROOT, 'src/cli.ts'), ...args], {
+    const child = spawn(process.execPath, ['--import', 'tsx', path.join(ROOT, entry), ...args], {
       cwd: ROOT,
       env: {
         PATH: `${binDir}${path.delimiter}${path.dirname(process.execPath)}${path.delimiter}/usr/bin${path.delimiter}/bin`,
@@ -75,6 +75,9 @@ const recorded = async (): Promise<{ args: string[]; env: Record<string, string>
   JSON.parse(await fs.readFile(record, 'utf8'));
 
 const signedIn = { OHMYGPT_API_KEY: MOCK_KEY };
+
+/** The CLI started under its short name, the way `bin/ov.mjs` starts it. */
+const ov = (args: string[], env: Record<string, string | undefined> = {}): Promise<Result> => cli(args, env, 'tests/helpers/ov-entry.ts');
 
 beforeAll(async () => {
   gateway = await startMockGateway();
@@ -117,6 +120,44 @@ describe('basics', () => {
     const bare = await cli([]);
     expect(bare.code).toBe(0);
     expect(bare.stdout).toContain('Usage');
+  });
+});
+
+describe('the short command', () => {
+  it('names itself in everything it tells the user to type', async () => {
+    const help = await ov(['--help']);
+    expect(help.code).toBe(0);
+    expect(help.stdout).toContain('ov <agent> [args…]');
+    expect(help.stdout).toContain('ov codex --model openai/gpt-5.5');
+    expect(help.stdout).toContain('`ov` and `omgvibe` are the same command.');
+    expect(help.stdout).not.toContain('omgvibe <agent>');
+
+    const signedOut = await ov(['claude', '-p', 'hi']);
+    expect(signedOut.code).toBe(1);
+    expect(signedOut.stderr).toContain('`ov login`');
+    expect((await ov(['claud'])).stderr).toContain('`ov claude`');
+    expect((await ov(['--lang', 'zh', 'claude', '-p', 'hi'])).stderr).toContain('`ov login`');
+  });
+
+  it('starts an agent exactly as the long name does', async () => {
+    const result = await ov(['codex', 'exec', 'hello'], signedIn);
+    expect(result.code).toBe(0);
+    expect((await recorded()).args.slice(-2)).toEqual(['exec', 'hello']);
+  });
+
+  it('reports in status whether `ov` is omgvibe or another program', async () => {
+    const other = path.join(sandbox, 'other-bin');
+    await fs.mkdir(other, { recursive: true });
+    await fs.writeFile(path.join(other, 'ov'), '#!/bin/sh\necho "ov version 0.37.0"\n', { mode: 0o755 });
+    const PATH = `${other}${path.delimiter}${binDir}${path.delimiter}${path.dirname(process.execPath)}${path.delimiter}/usr/bin${path.delimiter}/bin`;
+
+    const status = JSON.parse((await cli(['status', '--json'], { ...signedIn, PATH })).stdout);
+    expect(status.short_command).toEqual({ name: 'ov', state: 'shadowed', path: path.join(other, 'ov') });
+
+    const text = await cli(['status'], { ...signedIn, PATH });
+    expect(text.stdout).toContain('Short command');
+    expect(text.stdout).toContain('another program has this name');
+    expect(text.stdout).toContain('Use `omgvibe` instead.');
   });
 });
 

@@ -5,48 +5,55 @@
 Claude Code、Codex、opencode などのコーディングエージェントを、コマンド一つで [OhMyGPT](https://www.ohmygpt.com) につなぎます。
 
 ```bash
-npx omgvibe claude
+npm install -g omgvibe
+ov claude
 ```
 
 初回は OhMyGPT の API キーを尋ね、各リージョンのエンドポイントを計測して最速のものを選びます。それ以降は、キー・エンドポイント・モデルをそのセッションの引数と環境変数として渡した状態でエージェントが起動します。エージェント自身の設定ファイルには手を触れません。
 
-Node.js 20.12 以上が必要です。`npx` を使わずにインストールする場合は `npm install -g omgvibe`。
+`ov` は `omgvibe` の短い名前です。両方がインストールされ、同じプログラムを実行します。インストールせずに試す場合：
+
+```bash
+npx omgvibe claude
+```
+
+Node.js 20.12 以上が必要です。
 
 ## コマンド
 
 | コマンド | 内容 |
 | --- | --- |
-| `omgvibe` | 以下の機能をまとめたメニューを開く |
-| `omgvibe <agent> [引数…]` | このセッションだけ OhMyGPT でエージェントを起動する |
-| `omgvibe setup [agent…]` | エージェント自身の設定に OhMyGPT を書き込み、omgvibe なしでも使えるようにする |
-| `omgvibe reset [agent…]` | `setup` の変更を元に戻す |
-| `omgvibe login` / `logout` | API キーを保存、または削除する |
-| `omgvibe models [検索語…]` | 使えるモデルをコンテキスト長と料金つきで一覧する |
-| `omgvibe status` | サインイン状態、エンドポイント、インストール済みエージェントを表示する |
-| `omgvibe doctor` | キー、エンドポイント、3 種類の API プロトコルを無料で確認する |
-| `omgvibe endpoint [リージョン\|url\|auto]` | エンドポイントを計測して選ぶ |
-| `omgvibe update` | omgvibe を更新する |
+| `ov` | 以下の機能をまとめたメニューを開く |
+| `ov <agent> [引数…]` | このセッションだけ OhMyGPT でエージェントを起動する |
+| `ov setup [agent…]` | エージェント自身の設定に OhMyGPT を書き込み、omgvibe なしでも使えるようにする |
+| `ov reset [agent…]` | `setup` の変更を元に戻す |
+| `ov login` / `logout` | API キーを保存、または削除する |
+| `ov models [検索語…]` | 使えるモデルをコンテキスト長と料金つきで一覧する |
+| `ov status` | サインイン状態、エンドポイント、インストール済みエージェントを表示する |
+| `ov doctor` | キー、エンドポイント、3 種類の API プロトコルを無料で確認する |
+| `ov endpoint [リージョン\|url\|auto]` | エンドポイントを計測して選ぶ |
+| `ov update` | omgvibe を更新する |
 
 ## 対応エージェント
 
 | コマンド | エージェント | プロトコル | `setup` |
 | --- | --- | --- | --- |
-| `omgvibe claude` | [Claude Code](https://code.claude.com/docs) | Anthropic Messages | 対応 |
-| `omgvibe codex` | [Codex](https://developers.openai.com/codex) | OpenAI Responses | 対応 |
-| `omgvibe opencode` | [opencode](https://opencode.ai) 1.x / 2.x | OpenAI Chat Completions | 対応 |
-| `omgvibe kilo` | [Kilo Code](https://kilo.ai) | OpenAI Chat Completions | 対応 |
-| `omgvibe qwen` | [Qwen Code](https://github.com/QwenLM/qwen-code) | OpenAI Chat Completions | セッションのみ |
-| `omgvibe pi` | [Pi](https://pi.dev) | OpenAI Chat Completions | 対応 |
-| `omgvibe codewhale` | [CodeWhale](https://github.com/codewhale-hq/CodeWhale) | OpenAI Chat Completions | 対応 |
+| `ov claude` | [Claude Code](https://code.claude.com/docs) | Anthropic Messages | 対応 |
+| `ov codex` | [Codex](https://developers.openai.com/codex) | OpenAI Responses | 対応 |
+| `ov opencode` | [opencode](https://opencode.ai) 1.x / 2.x | OpenAI Chat Completions | 対応 |
+| `ov kilo` | [Kilo Code](https://kilo.ai) | OpenAI Chat Completions | 対応 |
+| `ov qwen` | [Qwen Code](https://github.com/QwenLM/qwen-code) | OpenAI Chat Completions | セッションのみ |
+| `ov pi` | [Pi](https://pi.dev) | OpenAI Chat Completions | 対応 |
+| `ov codewhale` | [CodeWhale](https://github.com/codewhale-hq/CodeWhale) | OpenAI Chat Completions | 対応 |
 
 エージェントが入っていない場合は、インストール用のコマンドを表示します。ターミナルでは、その場で実行するかどうかも尋ねます。
 
 エージェント名より後ろの引数は、omgvibe のオプションではない最初のものから、そのままエージェントに渡ります。
 
 ```bash
-omgvibe claude -p "この diff をレビューして"
-omgvibe codex --model openai/gpt-5.5 exec "失敗しているテストを直して"
-omgvibe claude -- --model opus        # -- の後ろは --model も Claude Code に渡る
+ov claude -p "この diff をレビューして"
+ov codex --model openai/gpt-5.5 exec "失敗しているテストを直して"
+ov claude -- --model opus        # -- の後ろは --model も Claude Code に渡る
 ```
 
 各エージェントに実際に渡す内容は [docs/agents.md](docs/agents.md) にまとめています。
@@ -56,10 +63,10 @@ omgvibe claude -- --model opus        # -- の後ろは --model も Claude Code 
 OhMyGPT のチャットモデルはどれも 3 種類のプロトコルすべてに対応しているため、どのモデルもどのエージェントで使えます。
 
 ```bash
-omgvibe models                 # すべてのチャットモデル（性能の高い順）
-omgvibe models claude sonnet   # 検索
-omgvibe codex --model zhipu/glm-5.3
-omgvibe opencode --pick        # 検索できる一覧から選ぶ。選んだモデルは記憶される
+ov models                 # すべてのチャットモデル（性能の高い順）
+ov models claude sonnet   # 検索
+ov codex --model zhipu/glm-5.3
+ov opencode --pick        # 検索できる一覧から選ぶ。選んだモデルは記憶される
 ```
 
 モデル ID は毎週変わる最新のカタログ（`GET /v1/models`）から取得するため、omgvibe 自体はモデル一覧を持ちません。名前の打ち間違いは補正します（`claude-sonet-5-5` → `anthropic/claude-sonnet-5-5`）。存在しないバージョンを別のバージョンに置き換えることはしません。
@@ -72,20 +79,20 @@ omgvibe opencode --pick        # 検索できる一覧から選ぶ。選んだ�
 
 ## セッションか setup か
 
-`omgvibe <agent>` はディスク上の何も変更しません。同じエージェントを別のプロバイダーでも使う場合や、そのマシンの設定を変えたくない場合に向いています。
+`ov <agent>` はディスク上の何も変更しません。同じエージェントを別のプロバイダーでも使う場合や、そのマシンの設定を変えたくない場合に向いています。
 
-`omgvibe setup` は、起動方法にかかわらず（素の `claude`、Codex のデスクトップアプリ、IDE 拡張）エージェントを OhMyGPT で使いたい場合のためのものです。
+`ov setup` は、起動方法にかかわらず（素の `claude`、Codex のデスクトップアプリ、IDE 拡張）エージェントを OhMyGPT で使いたい場合のためのものです。
 
 ```bash
-omgvibe setup claude codex     # 引数なしなら一覧から選ぶ
-omgvibe reset codex
+ov setup claude codex     # 引数なしなら一覧から選ぶ
+ov reset codex
 ```
 
 `setup` は必要な項目だけを書き換え、ファイルのそれ以外の部分はコメントも含めてそのまま残します。適用前に変更内容を表示し、各ファイルのコピーを `~/.omgvibe/backups/` に保存し、各項目の元の値を記録します。`reset` はその値を戻します。`setup` の後に自分で変更した項目には触れず、その旨を表示します。
 
 ## サインイン
 
-`omgvibe login` は [API キーのページ](https://www.ohmygpt.com/keys)を開き、貼り付けたキーを 1 回のリクエストで確認します。キーは `~/.omgvibe/config.json` に、本人だけが読める形で保存されます。
+`ov login` は [API キーのページ](https://www.ohmygpt.com/keys)を開き、貼り付けたキーを 1 回のリクエストで確認します。キーは `~/.omgvibe/config.json` に、本人だけが読める形で保存されます。
 
 保存したキーがなければ、環境変数 `OHMYGPT_API_KEY` を読みます。`--key` はその実行だけに使われます。優先順位は `--key`、`OHMYGPT_API_KEY`、保存済みキーの順です。
 
@@ -107,9 +114,9 @@ OhMyGPT は同じ API を複数のリージョンから提供しています。o
 | `eu` ヨーロッパ（ドイツ） | `https://api-ep-eu1.ohmygpt.com` |
 
 ```bash
-omgvibe endpoint          # 計測して選ぶ
-omgvibe endpoint cn2      # 常にこれを使う
-omgvibe endpoint auto     # 最速の自動選択に戻す
+ov endpoint          # 計測して選ぶ
+ov endpoint cn2      # 常にこれを使う
+ov endpoint auto     # 最速の自動選択に戻す
 ```
 
 `--endpoint <リージョン|url>` または環境変数 `OHMYGPT_BASE_URL` は、その実行だけのエンドポイントを指定します。omgvibe 自身のリクエストも、起動するエージェントと同じく `HTTPS_PROXY` / `HTTP_PROXY` を通り、`NO_PROXY` に従います。そのため、エージェントが実際に使う経路で計測されます。
@@ -117,7 +124,7 @@ omgvibe endpoint auto     # 最速の自動選択に戻す
 ## 接続の確認
 
 ```text
-$ omgvibe doctor
+$ ov doctor
 OhMyGPT への接続を確認しています  米国直結  https://api.ohmygpt.com
   ✓ エンドポイント                      到達可能、128 ms
   ✓ API キー                            有効、アカウント #1
@@ -144,17 +151,26 @@ OhMyGPT への接続を確認しています  米国直結  https://api.ohmygpt.
 | `-y`、`--yes` | 既定値をそのまま使い、質問しない |
 | `--json` | `models`、`status`、`doctor`、`endpoint` を JSON で出力する |
 
-エージェント名の後ろで omgvibe が受け取るのは `--model`/`-m`、`--pick`、`--endpoint`、`--key`、`--lang`、`--install`、`--yes` だけです。そのため `omgvibe claude --help` は Claude Code のヘルプを表示します。
+エージェント名の後ろで omgvibe が受け取るのは `--model`/`-m`、`--pick`、`--endpoint`、`--key`、`--lang`、`--install`、`--yes` だけです。そのため `ov claude --help` は Claude Code のヘルプを表示します。
+
+## `ov` という名前がすでに使われている場合
+
+`ov` という名前のプログラムはほかにもあり、ターミナル用のテキストビューアもその一つです。そうしたプログラムを入れている場合：
+
+- **npm がコマンドを置くディレクトリにある**（例：Node.js もその `ov` も Homebrew で入れた）：`npm install -g omgvibe` は `EEXIST` で止まり、何もインストールされません。npm は自分が作成していないファイルを置き換えないためです。その `ov` を削除するか名前を変える、または `npx omgvibe` を使い続けてください。
+- **別のディレクトリにあり、`PATH` で先に来る**：インストールは成功しますが、`ov` はそのプログラムを実行し続けます。`omgvibe` を使うか、npm の bin ディレクトリ（`npm prefix -g`）を `PATH` の先頭に移してください。
+
+お使いのコンピューターで `ov` が何を実行するかは `omgvibe status` で確認できます。
 
 ## omgvibe がリクエストに加えるもの
 
-エージェントがカスタムヘッダーに対応している場合、omgvibe は `X-OhMyGPT-Title` にエージェント名（例：`Claude Code`）を入れ、`HTTP-Referer` と `X-OhMyGPT-Categories: cli-agent` を付けます。これにより、[利用状況](https://www.ohmygpt.com/usage)をエージェントごとに分けて確認できます。それ以外は何も加えません。
+エージェントがカスタムヘッダーに対応している場合、omgvibe は `X-OhMyGPT-Title` にエージェント名（例：`Claude Code`）を入れ、`HTTP-Referer` と `X-OhMyGPT-Categories: cli-agent` を付けます。それ以外は何も加えません。
 
 omgvibe はテレメトリを送信しません。新しいバージョンの有無を、最大で 1 日 1 回 npm レジストリに問い合わせます。`OMGVIBE_NO_UPDATE_CHECK=1` で無効にできます。
 
 ## 0.2 からの移行
 
-1.0 ではウィザードがコマンドに置き換わりました。`npx omgvibe` は引き続きガイド付きのメニューを開きます。
+1.0 ではウィザードがコマンドに置き換わり、短い名前 `ov` が加わりました。引数なしの `ov` は引き続きガイド付きのメニューを開きます。
 
 - CodeX と Claude Code の特別価格チャンネルは提供を終了したため、削除しました。
 - 0.2 は設定ファイル全体を上書きしていました。1.0 は個々の項目だけを書き換え、元に戻せます。
