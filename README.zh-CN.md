@@ -1,108 +1,191 @@
 # omgvibe
+
 *语言: [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)*
 
-`omgvibe` 是一个交互式 NPX 向导，帮你把 **CodeX**、**Claude Code**、**OpenCode**
-或 **CodeWhale** 一键接入 OhMyGPT 的统一 `/v1` API。流程中会自动选择语言、安装
-CLI、测试节点延迟、备份配置并写入正确的 APIKey 与模型配置。
+一条命令，让 Claude Code、Codex、opencode 等编程 Agent 跑在 [OhMyGPT](https://www.ohmygpt.com) 上。
 
-## 主要特性
-- **零安装成本**：执行 `npx omgvibe` 即可完成全部步骤
-- **英语 / 简体中文 / 日语三语界面**，自动检测系统语言，也可手动切换
-- **默认配置 CodeX**（Claude Code、OpenCode、CodeWhale 一键切换）
-- **自动安装升级**目标 CLI，确保使用官方最新版本
-- **节点延迟测试**：对三个转发节点各测试 5 次 `GET /v1/models`，自动选中
-  可访问且平均延迟最低的节点
-- **安全备份**：在同目录生成带时间戳的 `.bak` 文件
-- 按目标写入默认/推荐模型，并为 CodeX 生成完整的 `models.json` 模型目录
-
-## 快速开始
-1. 请确保已安装 Node.js 18+ 与 npm。
-2. 在终端中执行：
-   ```bash
-   npx omgvibe
-   ```
-3. 选择界面语言，并指定需要配置的 CLI（默认 **CodeX**）。
-4. 确认是否执行对应的 `npm install -g` 命令。
-5. 按提示粘贴你的 OhMyGPT APIKey（可在 <https://www.ohmygpt.com/apis/keys> 获取）。
-6. 查看节点延迟结果，确认已预选的最快节点。
-7. 选择默认模型并确认写入。
-
-> 备份文件示例：`config.toml.20250101-103000.bak`，位于原文件同一目录，随时可恢复。
-
-## 转发节点
-
-OhMyGPT 由三个直连 `/v1` 节点提供服务，向导会自动测试并预选最快的可访问节点：
-
-| 节点 | 适用场景 |
-| --- | --- |
-| `https://apic1.ohmycdn.com` | Cloudflare 企业级 CDN —— 非中国大陆 && 非美国本土 |
-| `https://api.ohmygpt.com` | 美国直连 —— 美国本土 |
-| `https://cn2us02.opapi.win` | 中国大陆优化 CDN —— 中国大陆 |
-
-## 配置细节
-
-### CodeX（Responses API）
-
-向导同时提供独立的 **CodeX 特价渠道** 选项。该选项只更新
-`~/.codex/config.toml`，不会额外生成或覆盖 `~/.codex/models.json`，并使用
-`experimental_bearer_token` 完成认证；普通 CodeX 选项仍会生成完整模型目录。
-
-- 安装/更新 `@openai/codex`
-- `~/.codex/config.toml` —— 提供方 `omg`，`wire_api = "responses"`，Base URL
-  `https://<endpoint>/v1`，并以 `experimental_bearer_token = "<你的 API Key>"`
-  写入密钥
-- `~/.codex/models.json` —— 完整模型目录，默认 `gpt-6.1-sol`、`gpt-5.6-terra`、
-  `gpt-5.6-luna`，并包含全部支持 Responses 的模型（GPT-6/GPT-5.6、
-  Together/Ali/Tencent/DeepSeek/Fireworks）
-- 可选完整重置：把整个 `~/.codex` 移动到 `~/.codex-backup-<时间戳>` 并重建全新
-  目录——遇到 400 错误或模型列表显示不全时可尝试。CodeX 会话历史会保留在备份
-  目录中，不会被删除。
-
-### Claude Code（Messages API）
-- 安装/更新 `@anthropic-ai/claude-code`
-- `~/.claude/settings.json` —— `env` 区域指向 OhMyGPT，`ANTHROPIC_MODEL` 与
-  Opus/Sonnet/Haiku 槽位默认映射为 `claude-opus-5-5`、`claude-sonnet-5-5`、
-  `claude-haiku-5-5`
-- 另提供 **Claude Code（仅 Claude 模型）** 选项：不写入任何模型配置，直接沿用
-  Claude Code 自身的模型，并跳过模型选择步骤
-
-### OpenCode（Chat Completions API）
-- 安装/更新 `opencode-ai`
-- `~/.config/opencode/opencode.json` —— 自定义 `omg` 提供方
-  （`@ai-sdk/openai-compatible`），预注册大部分支持的模型
-
-### CodeWhale（Chat Completions API）
-- 安装/更新 `codewhale`
-- `~/.codewhale/config.toml` —— `provider = "openai"` 指向 OhMyGPT `base_url`；
-  默认 `alibaba:deepseek/deepseek-v4-flash-0731`（另可选
-  `alibaba:deepseek/deepseek-v4-pro-0813` 及其余模型）
-
-完整模型目录与各目标默认值请见 [支持的模型](./docs/supported-models.md)。
-
-## 参考文档
-- CodeX：<./docs/cli-docs/ds-codex.md>
-- Claude Code：<./docs/cli-docs/ds-claudecode.md>
-- OpenCode：<./docs/cli-docs/opencode-config-docs.md>
-- CodeWhale：<./docs/cli-docs/codewhale-config.md>
-
-## 本地化
-- 默认 README：简体中文（本文件）
-- English README: [README.md](README.md)
-- 日本語 README: [README.ja.md](README.ja.md)
-
-CLI 使用同一套翻译，并默认跟随系统语言。
-
-## 开发说明
 ```bash
-npm install
-npm run lint
-npm run build
+npm install -g omgvibe
+ov claude
 ```
 
-构建后可通过 `node dist/index.js` 进行本地验证。
+第一次运行会让你填 OhMyGPT API Key，并给各地区节点测速、选出最快的那个。之后再运行，Agent 启动时就已经接好：Key、节点和模型通过命令行参数与环境变量传给这一次会话，Agent 自己的配置文件不会被改动。
 
-## 支持与反馈
-- APIKey 获取 & 计费：<https://www.ohmygpt.com/apis/keys>
-- 技术支持：help@ohmygpt.com
+`ov` 是 `omgvibe` 的短名，两个命令会一起装上，运行的是同一个程序。不想安装、只想先试试：
 
-本项目遵循 MIT 开源协议，详见 [LICENSE](LICENSE)。
+```bash
+npx omgvibe claude
+```
+
+需要 Node.js 20.12 或更高版本。
+
+## 命令
+
+| 命令 | 作用 |
+| --- | --- |
+| `ov` | 打开菜单，下面的功能都在里面 |
+| `ov <agent> [参数…]` | 本次会话在 OhMyGPT 上启动 Agent |
+| `ov setup [agent…]` | 把 OhMyGPT 写进 Agent 自己的配置，不经 omgvibe 也能用 |
+| `ov reset [agent…]` | 撤销 `setup` 的改动 |
+| `ov login` / `logout` | 保存或删除 API Key |
+| `ov models [关键字…]` | 列出可用模型，带上下文长度和价格 |
+| `ov status` | 查看登录状态、节点和已安装的 Agent |
+| `ov doctor` | 检查 Key、节点和三种 API 协议，不产生费用 |
+| `ov endpoint [地区\|url\|auto]` | 测速并选择节点 |
+| `ov update` | 更新 omgvibe |
+
+## 支持的 Agent
+
+| 命令 | Agent | 协议 | `setup` |
+| --- | --- | --- | --- |
+| `ov claude` | [Claude Code](https://code.claude.com/docs) | Anthropic Messages | 支持 |
+| `ov codex` | [Codex](https://developers.openai.com/codex) | OpenAI Responses | 支持 |
+| `ov opencode` | [opencode](https://opencode.ai) 1.x 与 2.x | OpenAI Chat Completions | 支持 |
+| `ov kilo` | [Kilo Code](https://kilo.ai) | OpenAI Chat Completions | 支持 |
+| `ov qwen` | [Qwen Code](https://github.com/QwenLM/qwen-code) | OpenAI Chat Completions | 仅会话 |
+| `ov pi` | [Pi](https://pi.dev) | OpenAI Chat Completions | 支持 |
+| `ov codewhale` | [CodeWhale](https://github.com/codewhale-hq/CodeWhale) | OpenAI Chat Completions | 支持 |
+
+Agent 没装时，omgvibe 会列出它的安装命令；在终端里还会问你要不要直接装。
+
+Agent 名称之后的参数，从第一个不属于 omgvibe 的开始，原样交给 Agent：
+
+```bash
+ov claude -p "review 这个 diff"
+ov codex --model openai/gpt-5.5 exec "修好失败的测试"
+ov claude -- --model opus        # -- 之后，连 --model 也交给 Claude Code
+```
+
+每个 Agent 具体收到哪些参数和变量，见 [docs/agents.md](docs/agents.md)。
+
+## 选模型
+
+OhMyGPT 上的对话模型都同时支持三种协议，所以任何模型都能用在任何 Agent 里。
+
+```bash
+ov models                 # 全部对话模型，强的排前面
+ov models claude sonnet   # 搜索
+ov codex --model zhipu/glm-5.3
+ov opencode --pick        # 从可搜索的列表里选，选过会记住
+```
+
+模型 ID 取自实时目录（`GET /v1/models`）。目录每周都在变，所以 omgvibe 不内置模型表。名字拼错会自动纠正（`claude-sonet-5-5` → `anthropic/claude-sonnet-5-5`）；版本号对不上时不会替你换成别的版本。
+
+不带 `--model` 时：
+
+- **Claude Code** 用它自带的默认模型，`opus`、`sonnet`、`haiku` 这些别名照常可用，OhMyGPT 认它发出的 Claude 模型名。
+- **Codex** 用 `openai/gpt-5.5`，其余 Agent 用 `anthropic/claude-sonnet-5-5`。默认模型下线后，改用目录里标明的替代模型。
+- 用 `--pick`、菜单或 `setup` 选过的模型，会记作这个 Agent 的默认模型。
+
+## 会话还是 setup
+
+`ov <agent>` 不改磁盘上的任何东西。同一个 Agent 还要接别的服务商，或者不想动这台机器的配置时，用它。
+
+想让 Agent 不管怎么启动都走 OhMyGPT（直接敲 `claude`、Codex 桌面端、IDE 插件），用 `ov setup`。
+
+```bash
+ov setup claude codex     # 不带参数则从列表里选
+ov reset codex
+```
+
+`setup` 只改它需要的那几项，文件里其余内容连同注释都保持原样。改之前会先列出要改什么；每个文件在 `~/.omgvibe/backups/` 下留一份备份，每一项原来的值也都记了下来。`reset` 把这些值放回去；你在 `setup` 之后自己改过的项不会动，并会告诉你。
+
+## 登录
+
+`ov login` 打开 [API Key 页面](https://www.ohmygpt.com/keys)，读取你粘贴的 Key，并用一次请求校验。Key 保存在 `~/.omgvibe/config.json`，只有你本人可读。
+
+没有保存 Key 时，omgvibe 读取环境变量 `OHMYGPT_API_KEY`；`--key` 只对当次运行生效。优先级：`--key`、`OHMYGPT_API_KEY`、已保存的 Key。
+
+```bash
+OHMYGPT_API_KEY=sk-... npx omgvibe claude -p "hello"     # CI、容器
+```
+
+## 节点
+
+OhMyGPT 在多个地区提供同一套 API。omgvibe 在已建立的连接上给每个节点测速，用最快的那个，每周重测一次。
+
+| 地区 | Base URL |
+| --- | --- |
+| `cloudflare` Cloudflare 全球加速 | `https://apic1.ohmycdn.com` |
+| `us` 美国直连 | `https://api.ohmygpt.com` |
+| `asia` 亚洲优化 | `https://c-z0-api-01.hash070.com` |
+| `cn2` 亚洲（中国大陆优化） | `https://cn2us02.opapi.win` |
+| `sg` 新加坡 | `https://api-ep-sg1.ohmygpt.com` |
+| `eu` 欧洲（德国） | `https://api-ep-eu1.ohmygpt.com` |
+
+```bash
+ov endpoint          # 测速并选择
+ov endpoint cn2      # 固定用这个
+ov endpoint auto     # 恢复自动选最快
+```
+
+`--endpoint <地区|url>` 或环境变量 `OHMYGPT_BASE_URL` 只影响当次运行。omgvibe 自己的请求和它启动的 Agent 一样，走 `HTTPS_PROXY` / `HTTP_PROXY` 并遵守 `NO_PROXY`，所以测到的就是 Agent 实际会走的线路。
+
+## 检查连接
+
+```text
+$ ov doctor
+正在检查与 OhMyGPT 的连接  美国直连  https://api.ohmygpt.com
+  ✓ 节点                          可达，128 ms
+  ✓ API Key                       有效，账户 #1
+  ✓ 模型列表                      208 个模型
+  ✓ OpenAI Chat Completions 请求  394 ms 内返回
+  ✓ OpenAI Responses 请求         391 ms 内返回
+  ✓ Anthropic Messages 请求       396 ms 内返回
+
+一切正常。  以上检查用的是免费测试模型，不产生费用。
+```
+
+三次请求发给免费测试模型 `ohmygpt/mock`。`status` 和 `doctor` 支持 `--json`。
+
+## 选项
+
+| 选项 | 含义 |
+| --- | --- |
+| `-m`、`--model <id>` | 要用的模型 |
+| `--pick` | 从可搜索的列表里选模型 |
+| `--endpoint <地区\|url>` | 本次使用的节点 |
+| `--key <key>` | 本次使用的 API Key |
+| `--lang <en\|zh\|ja>` | 语言，默认跟随系统 |
+| `--install` | Agent 未安装时直接安装，不再询问 |
+| `-y`、`--yes` | 全部采用默认值，不提问 |
+| `--json` | `models`、`status`、`doctor`、`endpoint` 输出 JSON |
+
+Agent 名称之后，只有 `--model`/`-m`、`--pick`、`--endpoint`、`--key`、`--lang`、`--install`、`--yes` 归 omgvibe，所以 `ov claude --help` 显示的是 Claude Code 的帮助。
+
+## 如果 `ov` 已经被占用
+
+还有别的程序也叫 `ov`，其中一个是终端文本查看器。如果你装了这样的程序：
+
+- **它就在 npm 放命令的目录里**（比如 Node.js 和那个 `ov` 都是用 Homebrew 装的）：`npm install -g omgvibe` 会报 `EEXIST` 并且什么都不安装，因为 npm 不会替换不是它创建的文件。请移除或改名那个 `ov`，或者继续用 `npx omgvibe`。
+- **它在别的目录，而且在 `PATH` 里更靠前**：安装会成功，但 `ov` 运行的仍是那个程序。请改用 `omgvibe`，或者把 npm 的 bin 目录（`npm prefix -g`）挪到 `PATH` 最前面。
+
+`omgvibe status` 会显示你的电脑上 `ov` 运行的是什么。
+
+## omgvibe 往请求里加了什么
+
+在 Agent 支持自定义请求头的地方，omgvibe 用 `X-OhMyGPT-Title` 标明是哪个 Agent（例如 `Claude Code`），并带上 `HTTP-Referer` 和 `X-OhMyGPT-Categories: cli-agent`。除此之外不加别的。
+
+omgvibe 不上报任何遥测数据。它每天最多向 npm registry 查一次有没有新版本，设置 `OMGVIBE_NO_UPDATE_CHECK=1` 可以关掉。
+
+## 从 0.2 升级
+
+1.0 把向导换成了命令，并新增短名 `ov`；不带参数运行 `ov` 仍然会打开引导菜单。
+
+- CodeX 与 Claude Code 特价渠道已停止服务，相关选项已移除。
+- 0.2 会整体覆盖配置文件；1.0 只改单项设置，并且可以撤销。
+- 0.2 内置固定的模型表；1.0 读取实时目录，模型 ID 的形式是 `creator/model`。
+
+0.2 写下的配置，在节点仍然存在的情况下可以继续用。想清掉的话，恢复 0.2 留在配置文件旁边的 `.bak`，或者删除它写入的内容：`~/.codex/config.toml` 里的 `model_provider = "omg"`、`[model_providers.omg]` 表和 `model_catalog_json`，以及 `~/.codex/models.json`；`~/.claude/settings.json` 里 `env` 下的 `ANTHROPIC_*` 各项和 `apiKeyHelper`。
+
+## 开发
+
+见 [docs/development.md](docs/development.md)。版本变更记录在 [CHANGELOG.md](CHANGELOG.md)。
+
+## 支持
+
+- Key 与充值：<https://www.ohmygpt.com/keys>
+- 文档：<https://www.ohmygpt.com/docs>
+- 问题反馈：<https://github.com/DogeNet-LLC/omgvibe/issues> 或 help@ohmygpt.com
+
+MIT 许可证，见 [LICENSE](LICENSE)。
