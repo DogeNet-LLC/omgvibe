@@ -63,8 +63,12 @@ export const en = {
   loginIntro: 'Sign in to OhMyGPT',
   loginEnvFound: (masked: string) => `Found OHMYGPT_API_KEY in your environment (${masked}).`,
   loginEnvUse: 'Save this key for omgvibe?',
-  loginOpenBrowser: 'Open the API keys page in your browser to create or copy a key?',
-  loginKeysPage: (url: string) => `Create or copy a key at ${url}`,
+  loginBrowserOpened: (url: string) =>
+    `Opened the sign-in page in your browser. Click Authorize there. If it did not open, visit\n${url}`,
+  loginBrowserVisit: (url: string) =>
+    `Open this page in a browser on any device and click Authorize. It shows a key to paste here.\n${url}`,
+  loginBrowserWaiting: 'Waiting for the browser. If the page shows a key, paste it here',
+  loginBrowserDone: 'Authorized in the browser',
   loginPaste: 'Paste your API key',
   loginPasteEmpty: 'Enter your API key.',
   loginPasteWhitespace: 'A key has no spaces or line breaks. Paste it again.',

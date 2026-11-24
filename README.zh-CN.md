@@ -92,7 +92,7 @@ ov reset codex
 
 ## 登录
 
-`ov login` 打开 [API Key 页面](https://www.ohmygpt.com/keys)，读取你粘贴的 Key，并用一次请求校验。Key 保存在 `~/.omgvibe/config.json`，只有你本人可读。
+`ov login` 会打开 ohmygpt.com 上的登录页，你在登录状态下点“授权”，新 Key 就直接回到终端。浏览器和终端不在同一台机器上（SSH、容器），或者加了 `--no-browser` 时，页面会显示这个 Key，把它粘贴到终端即可；[API Key 页面](https://www.ohmygpt.com/keys)上已有的 Key 也可以粘贴。两种方式拿到的 Key 都会先用一次请求校验，再保存到 `~/.omgvibe/config.json`，只有你本人可读。
 
 没有保存 Key 时，omgvibe 读取环境变量 `OHMYGPT_API_KEY`；`--key` 只对当次运行生效。优先级：`--key`、`OHMYGPT_API_KEY`、已保存的 Key。
 

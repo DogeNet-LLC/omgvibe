@@ -59,8 +59,12 @@ export const ja: Messages = {
   loginIntro: 'OhMyGPT にサインイン',
   loginEnvFound: (masked) => `環境変数 OHMYGPT_API_KEY にキーがあります（${masked}）。`,
   loginEnvUse: 'このキーを omgvibe 用に保存しますか？',
-  loginOpenBrowser: 'ブラウザで API キーのページを開いて、キーを作成またはコピーしますか？',
-  loginKeysPage: (url) => `${url} でキーを作成またはコピーしてください`,
+  loginBrowserOpened: (url) =>
+    `ブラウザでサインインページを開きました。ページで「承認」をクリックしてください。開かない場合は次の URL にアクセスしてください\n${url}`,
+  loginBrowserVisit: (url) =>
+    `任意のデバイスのブラウザで次のページを開き、「承認」をクリックしてください。表示されたキーをここに貼り付けます。\n${url}`,
+  loginBrowserWaiting: 'ブラウザでの承認を待っています。ページにキーが表示された場合は、ここに貼り付けてください',
+  loginBrowserDone: 'ブラウザで承認されました',
   loginPaste: 'API キーを貼り付けてください',
   loginPasteEmpty: 'API キーを入力してください。',
   loginPasteWhitespace: 'キーに空白や改行は含まれません。もう一度貼り付けてください。',

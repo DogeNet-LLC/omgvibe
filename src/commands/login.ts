@@ -2,12 +2,14 @@ import * as clack from '@clack/prompts';
 
 import { loadSetupState } from '../core/setup-state';
 import { BILLING_URL, checkKey, cleanKey, KEY_ENV, KEYS_URL, keyProblem, maskKey } from '../core/account';
+import { loginPage, startBrowserLogin } from '../core/browser-login';
 import { DEFAULT_ENDPOINT, ENDPOINTS, fastest, probeAll, type ProbeResult, resolveEndpoint } from '../core/endpoints';
 import { cmd } from '../core/invocation';
+import { askForKey } from '../core/key-prompt';
 import { paths, tildify } from '../core/paths';
 import { BASE_URL_ENV, type Options, type ResolvedKey, resolveKey } from '../core/session';
 import { loadConfig, updateConfig } from '../core/store';
-import { ask, CliError, confirm, formatInt, isInteractive, note } from '../core/ui';
+import { CliError, confirm, formatInt, isInteractive, note } from '../core/ui';
 import { t } from '../i18n';
 import { AGENTS } from '../agents';
 import { endpointLines, openUrl } from './common';
@@ -37,26 +39,40 @@ async function chooseEndpoint(
   return { url: best?.endpoint.url ?? DEFAULT_ENDPOINT.url, results, best, fixed: false };
 }
 
-async function promptForKey(options: Options, env: NodeJS.ProcessEnv): Promise<string> {
+/**
+ * Asks for a key. The first time it opens the sign-in page, where a click on Authorize sends a new key
+ * back to this machine; the prompt takes a pasted key all the while, for when the browser cannot reach
+ * this machine and the page shows the key instead.
+ */
+async function promptForKey(options: Options, env: NodeJS.ProcessEnv, again: boolean): Promise<string> {
   const fromEnv = env[KEY_ENV] ? cleanKey(env[KEY_ENV]!) : '';
   if (fromEnv) {
     clack.log.info(t().loginEnvFound(maskKey(fromEnv)));
     if (await confirm(t().loginEnvUse, { yes: t().yes, no: t().no })) return fromEnv;
   }
-  if (options.browser && (await confirm(t().loginOpenBrowser, { yes: t().yes, no: t().no }))) openUrl(KEYS_URL, env);
-  else clack.log.info(t().loginKeysPage(KEYS_URL));
-  const typed = await ask(
-    clack.password({
-      message: t().loginPaste,
-      validate: (value) => {
-        const problem = keyProblem(cleanKey(value ?? ''));
+  // After a rejected key the sign-in page has had its turn: only the paste prompt is left.
+  const listening = again || !options.browser ? null : await startBrowserLogin(loginPage(env)).catch(() => null);
+  const browser = listening && openUrl(listening.url, env) ? listening : null;
+  if (!browser) listening?.close();
+  try {
+    if (browser) clack.log.info(t().loginBrowserOpened(browser.url));
+    // Without a browser here, the page is opened elsewhere and has no port to send the key to.
+    else if (!again) clack.log.info(t().loginBrowserVisit(loginPage(env)));
+    const key = await askForKey({
+      message: browser ? t().loginBrowserWaiting : t().loginPaste,
+      arrival: browser?.key,
+      arrivedMessage: t().loginBrowserDone,
+      validate: (typed) => {
+        const problem = keyProblem(cleanKey(typed));
         if (problem === 'empty') return t().loginPasteEmpty;
         if (problem === 'whitespace') return t().loginPasteWhitespace;
         return undefined;
       },
-    }),
-  );
-  return cleanKey(typed);
+    });
+    return cleanKey(key);
+  } finally {
+    browser?.close();
+  }
 }
 
 /**
@@ -91,7 +107,7 @@ export async function login(
 
   let key = given;
   for (let attempt = 0; ; attempt += 1) {
-    if (!key) key = await promptForKey(options, env);
+    if (!key) key = await promptForKey(options, env, attempt > 0);
     spinner?.start(t().loginChecking);
     const check = await checkKey(endpoint.url, key, env);
     if (check.ok) {

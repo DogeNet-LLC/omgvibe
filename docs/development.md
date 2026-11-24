@@ -69,6 +69,8 @@ Keep the key in a file inside the VM and pass it as `OHMYGPT_API_KEY`; do not pu
 
 To test the install that `npx omgvibe` offers before a release exists on npm, point it at the tarball: `OMGVIBE_PACKAGE_SPEC=/tmp/omgvibe-vm/omgvibe-1.0.0.tgz`.
 
+To test sign-in against a copy of the sign-in page that is not live yet, point `ov login` at it: `OMGVIBE_LOGIN_URL=http://localhost:5173/cli/login`. The page reaches omgvibe on `127.0.0.1`, and Lima forwards the VM's ports to the host, so a browser on the host can finish a sign-in started in the VM.
+
 ## Release
 
 1. Update `version` in `package.json` and add an entry to `CHANGELOG.md`.
