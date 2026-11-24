@@ -82,10 +82,12 @@ describe('agent model selection', () => {
       'anthropic/claude-opus-5-5',
       'openai/gpt-6.1-sol',
       'anthropic/claude-sonnet-5-5',
+      'openai/gpt-6.1-terra',
       'anthropic/claude-haiku-5-5',
       'openai/gpt-5.5',
       'zhipu/glm-5.3',
       'deepseek/deepseek-v4.1-flash',
+      'deepseek/deepseek-v4.1-flash-1017',
     ]);
     // Left out: the free test model, a retiring model, a tiny model, an audio model, an embedding model.
     for (const id of ['ohmygpt/mock', 'anthropic/claude-sonnet-4-5', 'tencent/hy-mt2-lite', 'google/gemini-3.8-flash-tts', 'openai/text-embedding-3-large']) {

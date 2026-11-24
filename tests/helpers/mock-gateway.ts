@@ -92,8 +92,10 @@ export const MOCK_MODELS: unknown[] = [
   model({ id: 'anthropic/claude-haiku-5-5', webSearch: true, name: 'Claude Haiku 5.5', score: 160.4, rating: 1398, input: 1.1, outputPrice: 5.5 }),
   model({ id: 'openai/gpt-5.5', webSearch: true, name: 'GPT-5.5', context: 1_050_000, score: 160.1, rating: 1466, input: 4.5, outputPrice: 27 }),
   model({ id: 'openai/gpt-6.1-sol', webSearch: true, name: 'GPT-6.1 Sol', context: 1_050_000, score: 168.4, rating: 1445 }),
+  model({ id: 'openai/gpt-6.1-terra', webSearch: true, name: 'GPT-6.1 Terra', context: 1_050_000, score: 164.2, rating: 1440 }),
   model({ id: 'zhipu/glm-5.3', name: 'GLM-5.3', context: 1_048_576, output: 131_072, score: 157.1, rating: 1475, input: 0.7, outputPrice: 2.45 }),
   model({ id: 'deepseek/deepseek-v4.1-flash', name: 'DeepSeek V4.1 Flash', output: 384_000, score: 156.7, input: 0.11, outputPrice: 0.22 }),
+  model({ id: 'deepseek/deepseek-v4.1-flash-1017', name: 'DeepSeek V4.1 Flash (1017)', output: 384_000, score: 156.5, input: 0.11, outputPrice: 0.22 }),
   // Scheduled for retirement, with a successor.
   model({
     id: 'anthropic/claude-sonnet-4-5',

@@ -74,7 +74,7 @@ Model IDs come from the live catalog (`GET /v1/models`), which changes every wee
 With no `--model`:
 
 - **Claude Code** keeps its own default and its `opus`, `sonnet` and `haiku` aliases. OhMyGPT accepts the Claude model names it sends.
-- **Codex** uses `openai/gpt-5.5`; the other agents use `anthropic/claude-sonnet-5-5`. If one of these is retired, its successor from the catalog is used.
+- **Codex** uses `openai/gpt-6.1-terra`; the other agents use `deepseek/deepseek-v4.1-flash-1017`. If one of these is retired, its successor from the catalog is used.
 - A model you chose with `--pick`, in the menu or in `setup` is remembered for that agent.
 
 ## Session or setup

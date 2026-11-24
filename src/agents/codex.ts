@@ -75,7 +75,7 @@ export const codex: AgentDefinition = {
   ],
   // Codex's own default model names are not catalog IDs, so one is always passed.
   modelRequired: true,
-  preferredModels: ['openai/gpt-5.5'],
+  preferredModels: ['openai/gpt-6.1-terra'],
 
   launch(input) {
     const overrides: Array<[string, TomlValue]> = [['model_provider', SESSION_PROVIDER]];

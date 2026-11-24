@@ -74,7 +74,7 @@ ov opencode --pick        # 検索できる一覧から選ぶ。選んだモデ�
 `--model` を付けない場合：
 
 - **Claude Code** は自身の既定モデルを使い、`opus`・`sonnet`・`haiku` のエイリアスもそのまま使えます。OhMyGPT は Claude Code が送る Claude のモデル名を受け付けます。
-- **Codex** は `openai/gpt-5.5`、それ以外のエージェントは `anthropic/claude-sonnet-5-5` を使います。提供が終了した場合は、カタログが示す後継モデルに切り替わります。
+- **Codex** は `openai/gpt-6.1-terra`、それ以外のエージェントは `deepseek/deepseek-v4.1-flash-1017` を使います。提供が終了した場合は、カタログが示す後継モデルに切り替わります。
 - `--pick`、メニュー、`setup` で選んだモデルは、そのエージェントの既定として記憶されます。
 
 ## セッションか setup か

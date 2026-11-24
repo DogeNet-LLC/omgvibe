@@ -30,7 +30,7 @@ export const qwen: AgentDefinition = {
     },
   ],
   modelRequired: true,
-  preferredModels: ['anthropic/claude-sonnet-5-5'],
+  preferredModels: ['deepseek/deepseek-v4.1-flash-1017'],
 
   launch(input) {
     const flags = ['--auth-type', 'openai', '--openai-base-url', `${input.endpoint}/v1`];

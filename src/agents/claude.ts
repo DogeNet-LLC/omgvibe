@@ -84,7 +84,7 @@ export const claude: AgentDefinition = {
     },
   ],
   modelRequired: false,
-  preferredModels: ['anthropic/claude-sonnet-5-5'],
+  preferredModels: ['deepseek/deepseek-v4.1-flash-1017'],
 
   async launch(input) {
     const env = gatewayEnv(input);

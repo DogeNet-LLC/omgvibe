@@ -109,7 +109,7 @@ function openCodeLike(flavor: Flavor): AgentDefinition {
     docs: flavor.docs,
     install: flavor.install,
     modelRequired: true,
-    preferredModels: ['anthropic/claude-sonnet-5-5'],
+    preferredModels: ['deepseek/deepseek-v4.1-flash-1017'],
 
     launch(input) {
       // The key stays out of the config text: `{env:…}` is resolved by the agent.
