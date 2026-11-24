@@ -74,7 +74,7 @@ ov opencode --pick        # 検索できる一覧から選ぶ。選んだモデ�
 `--model` を付けない場合：
 
 - **Claude Code** は自身の既定モデルを使い、`opus`・`sonnet`・`haiku` のエイリアスもそのまま使えます。OhMyGPT は Claude Code が送る Claude のモデル名を受け付けます。
-- **Codex** は `openai/gpt-5.5`、それ以外のエージェントは `anthropic/claude-sonnet-5-5` を使います。提供が終了した場合は、カタログが示す後継モデルに切り替わります。
+- **Codex** は `openai/gpt-6.1-terra`、それ以外のエージェントは `deepseek/deepseek-v4.1-flash-1017` を使います。提供が終了した場合は、カタログが示す後継モデルに切り替わります。
 - `--pick`、メニュー、`setup` で選んだモデルは、そのエージェントの既定として記憶されます。
 
 ## セッションか setup か
@@ -92,7 +92,7 @@ ov reset codex
 
 ## サインイン
 
-`ov login` は [API キーのページ](https://www.ohmygpt.com/keys)を開き、貼り付けたキーを 1 回のリクエストで確認します。キーは `~/.omgvibe/config.json` に、本人だけが読める形で保存されます。
+`ov login` は ohmygpt.com のサインインページを開きます。サインインした状態で「承認」をクリックすると、新しいキーがそのままターミナルに届きます。ブラウザとターミナルが別のマシンにある場合（SSH、コンテナ）や `--no-browser` を付けた場合は、ページにキーが表示されるので、ターミナルに貼り付けます。[API キーのページ](https://www.ohmygpt.com/keys)にある既存のキーも貼り付けられます。どちらの場合も、キーは 1 回のリクエストで確認され、`~/.omgvibe/config.json` に本人だけが読める形で保存されます。
 
 保存したキーがなければ、環境変数 `OHMYGPT_API_KEY` を読みます。`--key` はその実行だけに使われます。優先順位は `--key`、`OHMYGPT_API_KEY`、保存済みキーの順です。
 

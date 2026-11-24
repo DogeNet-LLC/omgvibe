@@ -190,7 +190,7 @@ describe('launching an agent', () => {
     expect(result.code).toBe(0);
     const run = await recorded();
     expect(run.args.slice(-2)).toEqual(['exec', 'fix it']);
-    expect(run.args).toContain('model="openai/gpt-5.5"');
+    expect(run.args).toContain('model="openai/gpt-6.1-terra"');
     expect(run.args).toContain(`model_providers.omgvibe.base_url="${gateway.url}/v1"`);
     expect(run.env.OHMYGPT_API_KEY).toBe(MOCK_KEY);
   });

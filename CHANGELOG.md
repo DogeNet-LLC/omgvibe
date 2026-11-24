@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+- **Sign in through the browser.** `ov login` (and the first `ov <agent>`) opens a sign-in page on ohmygpt.com; one click on Authorize there sends a new key back to the terminal, with no key to create, copy or paste. When the browser cannot reach the terminal's machine (SSH, containers, `--no-browser`), the page shows the key and the terminal takes it pasted. A key you already have can be pasted at the same prompt.
+- **New default models.** Codex starts on `openai/gpt-6.1-terra`; opencode, Kilo Code, Qwen Code, Pi and CodeWhale start on `deepseek/deepseek-v4.1-flash-1017`. Claude Code still uses its own default. `--model` and a model picked earlier are unaffected.
+
 ## 1.0.0
 
 A rewrite. The wizard that wrote config files is now a launcher with commands.

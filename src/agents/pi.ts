@@ -91,7 +91,7 @@ export const pi: AgentDefinition = {
     },
   ],
   modelRequired: true,
-  preferredModels: ['anthropic/claude-sonnet-5-5'],
+  preferredModels: ['deepseek/deepseek-v4.1-flash-1017'],
 
   async launch(input) {
     // `$NAME` in a provider's apiKey is read from the environment by Pi, so the file holds no secret.

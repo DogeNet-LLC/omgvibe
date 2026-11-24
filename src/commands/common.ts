@@ -15,7 +15,8 @@ export function openUrl(url: string, env: NodeJS.ProcessEnv = process.env): bool
     process.platform === 'darwin'
       ? ['open', [url]]
       : process.platform === 'win32'
-        ? ['cmd', ['/c', 'start', '""', url]]
+        ? // cmd reads `&` as the end of a command, which would cut a query string short.
+          ['cmd', ['/c', 'start', '""', url.replace(/&/g, '^&')]]
         : ['xdg-open', [url]];
   // A Linux box with no display (SSH, a container) has nothing to open the page in.
   if (process.platform === 'linux' && !env.DISPLAY && !env.WAYLAND_DISPLAY) return false;

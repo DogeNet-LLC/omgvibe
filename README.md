@@ -74,7 +74,7 @@ Model IDs come from the live catalog (`GET /v1/models`), which changes every wee
 With no `--model`:
 
 - **Claude Code** keeps its own default and its `opus`, `sonnet` and `haiku` aliases. OhMyGPT accepts the Claude model names it sends.
-- **Codex** uses `openai/gpt-5.5`; the other agents use `anthropic/claude-sonnet-5-5`. If one of these is retired, its successor from the catalog is used.
+- **Codex** uses `openai/gpt-6.1-terra`; the other agents use `deepseek/deepseek-v4.1-flash-1017`. If one of these is retired, its successor from the catalog is used.
 - A model you chose with `--pick`, in the menu or in `setup` is remembered for that agent.
 
 ## Session or setup
@@ -92,7 +92,7 @@ ov reset codex
 
 ## Signing in
 
-`ov login` opens the [API keys page](https://www.ohmygpt.com/keys), takes the key you paste and checks it with one request. The key is saved in `~/.omgvibe/config.json`, readable only by you.
+`ov login` opens a page on ohmygpt.com where you click Authorize while signed in, and a new key comes straight back to the terminal. When the browser runs on another machine (SSH, a container) or `--no-browser` is given, the page shows the key and you paste it into the terminal; a key from the [API keys page](https://www.ohmygpt.com/keys) can be pasted there too. Either way the key is checked with one request and saved in `~/.omgvibe/config.json`, readable only by you.
 
 Without a saved key, omgvibe reads `OHMYGPT_API_KEY`. `--key` sets one for a single run. Order of precedence: `--key`, `OHMYGPT_API_KEY`, the saved key.
 

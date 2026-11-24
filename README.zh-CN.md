@@ -74,7 +74,7 @@ ov opencode --pick        # 从可搜索的列表里选，选过会记住
 不带 `--model` 时：
 
 - **Claude Code** 用它自带的默认模型，`opus`、`sonnet`、`haiku` 这些别名照常可用，OhMyGPT 认它发出的 Claude 模型名。
-- **Codex** 用 `openai/gpt-5.5`，其余 Agent 用 `anthropic/claude-sonnet-5-5`。默认模型下线后，改用目录里标明的替代模型。
+- **Codex** 用 `openai/gpt-6.1-terra`，其余 Agent 用 `deepseek/deepseek-v4.1-flash-1017`。默认模型下线后，改用目录里标明的替代模型。
 - 用 `--pick`、菜单或 `setup` 选过的模型，会记作这个 Agent 的默认模型。
 
 ## 会话还是 setup
@@ -92,7 +92,7 @@ ov reset codex
 
 ## 登录
 
-`ov login` 打开 [API Key 页面](https://www.ohmygpt.com/keys)，读取你粘贴的 Key，并用一次请求校验。Key 保存在 `~/.omgvibe/config.json`，只有你本人可读。
+`ov login` 会打开 ohmygpt.com 上的登录页，你在登录状态下点“授权”，新 Key 就直接回到终端。浏览器和终端不在同一台机器上（SSH、容器），或者加了 `--no-browser` 时，页面会显示这个 Key，把它粘贴到终端即可；[API Key 页面](https://www.ohmygpt.com/keys)上已有的 Key 也可以粘贴。两种方式拿到的 Key 都会先用一次请求校验，再保存到 `~/.omgvibe/config.json`，只有你本人可读。
 
 没有保存 Key 时，omgvibe 读取环境变量 `OHMYGPT_API_KEY`；`--key` 只对当次运行生效。优先级：`--key`、`OHMYGPT_API_KEY`、已保存的 Key。
 

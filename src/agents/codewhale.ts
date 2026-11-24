@@ -48,7 +48,7 @@ export const codewhale: AgentDefinition = {
     },
   ],
   modelRequired: true,
-  preferredModels: ['deepseek/deepseek-v4.1-flash', 'anthropic/claude-sonnet-5-5'],
+  preferredModels: ['deepseek/deepseek-v4.1-flash-1017'],
 
   async launch(input) {
     const userConfig = configPath(input.home, input.env);
